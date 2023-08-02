@@ -1,0 +1,28 @@
+version: '3'
+
+env:
+  COMPOSE_PROJECT_NAME: patients
+  UID:
+    sh: 'if [ `echo $(id -u) -lt 1000` ]; then echo 1000; else echo $(id -u); fi'
+  GID:
+    sh: 'if [ `echo $(id -g) -lt 1000` ]; then echo 1000; else echo $(id -g); fi'
+
+tasks:
+  build:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -f .docker/docker-compose.dev.yml -p $COMPOSE_PROJECT_NAME build
+  up:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -f .docker/docker-compose.dev.yml -p $COMPOSE_PROJECT_NAME up -d apache mysql mailpit redis
+  down:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -f .docker/docker-compose.dev.yml -p $COMPOSE_PROJECT_NAME down
+  composer:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -f .docker/docker-compose.dev.yml -p $COMPOSE_PROJECT_NAME exec php composer {{.CLI_ARGS}}
+  artisan:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -f .docker/docker-compose.dev.yml -p $COMPOSE_PROJECT_NAME exec php php artisan {{.CLI_ARGS}}
+  node:
+    cmds:
+      - UID=$UID GID=$GID docker-compose -f .docker/docker-compose.yml -f .docker/docker-compose.dev.yml -p $COMPOSE_PROJECT_NAME run --rm node {{.CLI_ARGS}}

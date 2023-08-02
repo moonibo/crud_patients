@@ -1,0 +1,107 @@
+version: "3.8"
+services:
+  apache:
+    container_name: ${COMPOSE_PROJECT_NAME}-apache
+    image: ${COMPOSE_PROJECT_NAME}-apache
+    build:
+      context: "apache"
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    depends_on:
+    - php
+    networks:
+      docker:
+        aliases:
+        - ${COMPOSE_PROJECT_NAME}.localhost
+    volumes:
+    - php-fpm-socket:/var/run/php
+    - ../:/app
+  php:
+    environment:
+    - XDEBUG_MODE=off
+    container_name: ${COMPOSE_PROJECT_NAME}-php
+    image: ${COMPOSE_PROJECT_NAME}-php
+    build:
+      context: "php"
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    networks:
+    - docker
+    volumes:
+    - redis-socket:/var/run/redis
+    - mysql-socket:/var/run/mysqld
+    - php-fpm-socket:/var/run/php
+    - ..:/app
+    - ~/.config/composer/auth.json:/home/app/.composer/auth.json
+    - ~/.ssh/:/home/app/.ssh:ro
+  mysql:
+    container_name: ${COMPOSE_PROJECT_NAME}-mysql
+    image: ${COMPOSE_PROJECT_NAME}-mysql
+    environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=${COMPOSE_PROJECT_NAME}
+    build:
+      context: "mysql"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_520_ci
+    networks:
+      docker:
+        aliases:
+        - mysql.localhost
+    volumes:
+    - mysql:/var/lib/mysql
+    - mysql-socket:/var/run/mysqld
+  redis:
+    container_name: ${COMPOSE_PROJECT_NAME}-redis
+    image: ${COMPOSE_PROJECT_NAME}-redis
+    build:
+      context: "redis"
+    volumes:
+    - redis:/data
+    - redis-socket:/var/run/redis
+    networks:
+      docker:
+        aliases:
+        - redis.localhost
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+      test: [ "CMD-SHELL", "redis-cli", "--raw", "incr", "ping" ]
+  node:
+    container_name: ${COMPOSE_PROJECT_NAME}-node
+    image: ${COMPOSE_PROJECT_NAME}-node
+    build:
+      context: "node"
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    networks:
+    - docker
+    volumes:
+    - ../:/app
+  mailpit:
+    container_name: ${COMPOSE_PROJECT_NAME}-mailpit
+    image: ${COMPOSE_PROJECT_NAME}-mailpit
+    build:
+      context: "mailpit"
+    environment:
+    - TZ=Europe/Madrid
+    networks:
+      docker:
+        aliases:
+        - mailpit.localhost
+
+volumes:
+  php-fpm-socket:
+  mysql:
+  mysql-socket:
+  redis-socket:
+  redis:
+  rabbitmq:
+
+networks:
+  docker:
+    name: ${COMPOSE_PROJECT_NAME}-network
