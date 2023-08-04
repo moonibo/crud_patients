@@ -19,5 +19,12 @@ class Patient extends Model
         'name',
         'surname',
         'mail',
+        'gender',
     ];
+
+
+    public function setGenderAttribute($value)
+    {
+        return $this->attributes["gender"] = $value === "H" ? 0 : 1;
+    }
 }

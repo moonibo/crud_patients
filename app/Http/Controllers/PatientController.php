@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePatientRequest;
+use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
 use App\Repositories\PatientRepository;
 
@@ -45,7 +46,18 @@ class PatientController extends Controller
      */
     public function update(StorePatientRequest $request, string $id) : JsonResponse|array
     {
-        $patient = $this->patientRepository->update($request->validated(), $id);
+        $patient = $this->patientRepository->find($id);
+
+        if ($request->validated()) {
+            $patient->update([
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'mail' => $request->mail,
+                'gender' => $request->gender,
+            ]);
+            $patient->save();
+        }
+
         return response()->json(['output' => 'Patient updated successfully', 'patient' => $patient]);
     }
 

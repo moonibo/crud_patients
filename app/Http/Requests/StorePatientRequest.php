@@ -28,6 +28,7 @@ class StorePatientRequest extends FormRequest
             'name' => 'required|string',
             'surname' => 'required|string',
             'mail' => "required|email|unique:patients,mail,$this->id,id",
+            'gender' => "required|string",
         ];
     }
 }
