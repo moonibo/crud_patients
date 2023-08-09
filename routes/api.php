@@ -20,10 +20,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['namespace' => 'App\Http\Controllers', 'middleware' => \App\Http\Middleware\AcceptJson::class], function () {
-    Route::get('/patients', 'PatientController@index' )->name('index');
-    Route::get('/patients/{id}', 'PatientController@show')->name('find');
-    Route::post('/patients/store','PatientController@store')->name('store');
-    Route::post('/patients/update/{id}', 'PatientController@update')->name('update');
-    Route::post('/patients/delete/{id}', 'PatientController@delete')->name('delete');
+    Route::get('/patients', 'PatientController@index' )->name('patients_index');
+    Route::get('/patients/{id}', 'PatientController@show')->name('patients_find');
+    Route::get('/patients/prescribers/{prescriber_id}', 'PatientController@findPrescriber')->name('patients_find_prescriber');
+    Route::post('/patients/store','PatientController@store')->name('patients_store');
+    Route::post('/patients/update/{id}', 'PatientController@update')->name('patients_update');
+    Route::post('/patients/delete/{id}', 'PatientController@delete')->name('patients_delete');
+
+    Route::get('/prescribers', 'PrescriberController@index' )->name('prescribers_index');
+    Route::get('/prescribers/{id}', 'PrescriberController@show')->name('prescribers_find');
+    Route::post('/prescribers/store','PrescriberController@store')->name('prescribers_store');
+    Route::post('/prescribers/update/{id}', 'PrescriberController@update')->name('prescribers_update');
+    Route::post('/prescribers/delete/{id}', 'PrescriberController@delete')->name('prescribers_delete');
+
+    Route::get('/speciality', 'SpecialityController@index' )->name('speciality_index');
+    Route::get('/speciality/{id}', 'SpecialityController@show')->name('speciality_find');
+    Route::post('/speciality/store','SpecialityController@store')->name('speciality_store');
+    Route::post('/speciality/update/{id}', 'SpecialityController@update')->name('speciality_update');
+    Route::post('/speciality/delete/{id}', 'SpecialityController@delete')->name('speciality_delete');
 });
 

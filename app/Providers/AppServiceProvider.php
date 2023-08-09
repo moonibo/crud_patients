@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Repositories\PatientRepository;
+use App\Repositories\PrescriberRepository;
+use App\Repositories\SpecialityRepository;
+use App\Services\PatientInterface;
+use App\Services\PrescriberInterface;
+use App\Services\SpecialityInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(PatientInterface::class, PatientRepository::class);
+        $this->app->bind(PrescriberInterface::class, PrescriberRepository::class);
+        $this->app->bind(SpecialityInterface::class, SpecialityRepository::class);
     }
 
     /**

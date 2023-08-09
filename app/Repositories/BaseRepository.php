@@ -30,12 +30,18 @@ class BaseRepository
     public function update(array $attributes, int $id): Model|Builder
     {
         $this->query()->where(['id' => $id])->update($attributes);
+
         return $this->find($id);
     }
 
     public function find(int $id): ?Model
     {
         return $this->query()->find($id);
+    }
+
+    public function findPrescriber(int $prescriber_id): array|Collection
+    {
+        return $this->query()->where(['prescriber_id' => $prescriber_id])->get();
     }
 
     public function delete(int $id): Model|bool
