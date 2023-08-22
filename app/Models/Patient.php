@@ -21,13 +21,4 @@ class Patient extends Model
         'prescriber_id',
     ];
 
-    /*protected $dispatchesEvents = [
-        'saving' => \App\Events\PatientsUpdated::class,
-    ];
-
-
-    public function setGenderAttribute($value)
-    {
-        return $this->attributes["gender"] = $value === "H" ? 0 : 1;
-    }*/
 }

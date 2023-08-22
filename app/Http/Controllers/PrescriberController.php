@@ -19,7 +19,7 @@ class PrescriberController extends Controller
     public function index() : JsonResponse|array
     {
         $prescribers = $this->prescriberService->index();
-        return response()->json(['patients' => $prescribers]);
+        return response()->json(['prescribers' => $prescribers]);
     }
 
     /**
@@ -30,6 +30,18 @@ class PrescriberController extends Controller
         $prescriber = $this->prescriberService->show($id);
         if (!$prescriber) { return response()->json(['output' => 'This prescriber does not exist']);}
         return response()->json(['prescriber' => $prescriber]);
+    }
+
+    public function findConsultationById(int $consultation_id) : JsonResponse|array
+    {
+        $prescribers = $this->prescriberService->findConsultationById($consultation_id);
+        return response()->json(['prescribers' => $prescribers]);
+    }
+
+    public function findSpecialityById(int $speciality_id) : JsonResponse|array
+    {
+        $prescribers = $this->prescriberService->findSpecialityById($speciality_id);
+        return response()->json(['prescribers' => $prescribers]);
     }
 
     /**
@@ -44,9 +56,9 @@ class PrescriberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id) : JsonResponse|array
+    public function update(StorePrescriberRequest $request, string $id) : JsonResponse|array
     {
-        $prescriber = $this->prescriberService->update((array)$request, $id);
+        $prescriber = $this->prescriberService->update($request->validated(), $id);
 
         return response()->json(['output' => 'Prescriber updated successfully', 'Prescriber' => $prescriber]);
     }

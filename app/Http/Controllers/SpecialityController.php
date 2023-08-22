@@ -44,9 +44,9 @@ class SpecialityController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id) : JsonResponse|array
+    public function update(StoreSpecialityRequest $request, string $id) : JsonResponse|array
     {
-        $speciality = $this->specialityService->update((array)$request, $id);
+        $speciality = $this->specialityService->update($request->validated(), $id);
         return response()->json(['output' => 'Speciality updated successfully', 'Speciality' => $speciality]);
     }
 

@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Patient;
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePrescriberRequest extends FormRequest
+class StoreRecordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +23,10 @@ class StorePrescriberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'speciality_id' => 'required|int',
-            'consultation_id' => 'required|int',
+            'prescriber_id' => 'required|int',
+            'patient_id' => 'required|int',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
         ];
     }
 

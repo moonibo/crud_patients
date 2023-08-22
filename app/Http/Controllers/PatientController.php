@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePatientsRequest;
+use App\Http\Requests\StorePatientRequest;
 use App\Services\PatientService;
 use Illuminate\Http\JsonResponse;
 
@@ -32,16 +32,16 @@ class PatientController extends Controller
         return response()->json(['patient' => $patient]);
     }
 
-    public function findPrescriber(int $prescriber_id) : JsonResponse|array
+    public function findPrescriberById(int $prescriber_id) : JsonResponse|array
     {
-        $patients = $this->patientService->findPrescriber($prescriber_id);
+        $patients = $this->patientService->findPrescriberById($prescriber_id);
         return response()->json(['patients' => $patients]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePatientsRequest $request) : JsonResponse|array
+    public function store(StorePatientRequest $request) : JsonResponse|array
     {
         $patient = $this->patientService->store($request->validated());
         return response()->json(['output' => 'Patient added successfully', 'patient' => $patient]);
@@ -50,7 +50,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StorePatientsRequest $request, string $id) : JsonResponse|array
+    public function update(StorePatientRequest $request, string $id) : JsonResponse|array
     {
         $patient = $this->patientService->update($request->validated(), $id);
         return response()->json(['output' => 'Patient updated successfully', 'patient' => $patient]);

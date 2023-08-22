@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface PrescriberInterface
+interface PrescriptionInterface
 {
     public function all();
 
@@ -12,9 +12,13 @@ interface PrescriberInterface
 
     public function find(int $id);
 
+    public function findPrescriberById(int $prescriber_id);
+
+    public function findPatientById (int $patient_id);
+
     public function findConsultationById(int $consultation_id);
 
-    public function findSpecialityById (int $speciality_id);
+    public function findRecordById (int $record_id);
 
     public function delete(int $id);
 }

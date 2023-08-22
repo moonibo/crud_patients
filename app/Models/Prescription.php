@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Prescriber extends Model
+class Prescription extends Model
 {
     public $timestamps = false;
 
@@ -16,8 +15,12 @@ class Prescriber extends Model
      */
 
     protected $fillable = [
-        'name',
-        'speciality_id',
+        'prescriber_id',
+        'patient_id',
         'consultation_id',
+        'record_id',
+        'doses_per_day',
+        'days',
     ];
+
 }

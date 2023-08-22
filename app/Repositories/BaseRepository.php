@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -39,9 +40,34 @@ class BaseRepository
         return $this->query()->find($id);
     }
 
-    public function findPrescriber(int $prescriber_id): array|Collection
+    public function findPrescriberById(int $prescriber_id): array|Collection
     {
         return $this->query()->where(['prescriber_id' => $prescriber_id])->get();
+    }
+
+    public function findPatientById(int $patient_id) : array|Collection
+    {
+        return $this->query()->where(['patient_id' => $patient_id])->get();
+    }
+
+    public function findConsultationById(int $consultation_id) : array|Collection
+    {
+        return $this->query()->where(['consultation_id' => $consultation_id])->get();
+    }
+
+    public function findSpecialityById (int $speciality_id) : array|Collection
+    {
+        return $this->query()->where(['speciality_id' => $speciality_id])->get();
+    }
+
+    public function findRecordById (int $record_id) : array|Collection
+    {
+        return $this->query()->where(['record_id' => $record_id])->get();
+    }
+
+    public function findRecordByPatientIdAndPrescriberId(int $patient_id, int $prescriber_id) : array|Collection
+    {
+        return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])->get();
     }
 
     public function delete(int $id): Model|bool

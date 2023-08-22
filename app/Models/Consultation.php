@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Prescriber extends Model
+class Consultation extends Model
 {
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -17,7 +14,5 @@ class Prescriber extends Model
 
     protected $fillable = [
         'name',
-        'speciality_id',
-        'consultation_id',
     ];
 }

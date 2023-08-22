@@ -19,6 +19,16 @@ class PrescriberService
         return $this->prescriber->find($id);
     }
 
+    public function findConsultationById(int $consultation_id)
+    {
+        return $this->prescriber->findConsultationById($consultation_id);
+    }
+
+    public function findSpecialityById (int $speciality_id)
+    {
+        return $this->prescriber->findSpecialityById($speciality_id);
+    }
+
     public function store(array $attributes)
     {
         return $this->prescriber->create($attributes);

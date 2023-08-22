@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Prescriber extends Model
+class Record extends Model
 {
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -16,8 +14,10 @@ class Prescriber extends Model
      */
 
     protected $fillable = [
-        'name',
-        'speciality_id',
-        'consultation_id',
+        'prescriber_id',
+        'patient_id',
+        'start_date',
+        'end_date',
     ];
+
 }

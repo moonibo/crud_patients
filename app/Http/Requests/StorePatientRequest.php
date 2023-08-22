@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePrescriberRequest extends FormRequest
+class StorePatientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,10 @@ class StorePrescriberRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'speciality_id' => 'required|int',
-            'consultation_id' => 'required|int',
+            'surname' => 'required|string',
+            'mail' => "required|email|unique:patients,mail,$this->id,id",
+            'gender' => "required|string",
+            'prescriber_id' => "int",
         ];
     }
 
