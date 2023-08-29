@@ -8,7 +8,10 @@ use Carbon\Carbon;
 class RecordService
 {
     public function __construct(private readonly RecordInterface $record,
-                                private readonly PrescriptionInterface $prescription)
+                                private readonly PrescriberInterface $prescriber,
+                                private readonly PatientInterface $patient,
+                                private readonly PrescriptionInterface $prescription,
+    )
     {
     }
 
@@ -32,14 +35,38 @@ class RecordService
         return $this->record->findPatientById($patient_id);
     }
 
+    public function findExistingIds (array $attributes): bool|string
+    {
+        if (!$this->prescriber->find($attributes['prescriber_id'])) {
+            return 'prescriber_KO';
+        }
+
+        if (!$this->patient->find($attributes['patient_id'])) {
+            return 'patient_KO';
+        }
+        return 'OK';
+    }
+
     public function store (array $attributes)
     {
-        return $this->record->create($attributes);
+        $message = $this->findExistingIds($attributes);
+
+        if ($message === 'OK') {
+            return $this->record->create($attributes);
+        } else {
+            return $message;
+        }
     }
 
     public function update (array $attributes, int $id)
     {
-        return $this->record->update($attributes, $id);
+        $message = $this->findExistingIds($attributes);
+
+        if ($message === 'OK') {
+            return $this->record->update($attributes, $id);
+        } else {
+            return $message;
+        }
     }
 
     public function delete (int $id)
@@ -49,11 +76,7 @@ class RecordService
 
     public function findActiveRecord(int $patient_id, int $prescriber_id)
     {
-        $record = $this->record->findRecordByPatientIdAndPrescriberId($patient_id, $prescriber_id);
-
-        if (empty($record[0])) { return null; }
-
-        return $record;
+        return $this->record->findRecordByPatientIdAndPrescriberId($patient_id, $prescriber_id);
     }
 
     public function createNewRecordWhenExpired(int $patient_id, int $prescriber_id)

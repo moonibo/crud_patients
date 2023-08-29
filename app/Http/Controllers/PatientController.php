@@ -44,7 +44,12 @@ class PatientController extends Controller
     public function store(StorePatientRequest $request) : JsonResponse|array
     {
         $patient = $this->patientService->store($request->validated());
-        return response()->json(['output' => 'Patient added successfully', 'patient' => $patient]);
+
+        return match($patient) {
+            'prescriber_KO' => response()->json(['output' => 'Patient could not be added: Prescriber Id does not exist']),
+            default => response()->json(['output' => 'Patient added successfully', 'patient' => $patient])
+        };
+
     }
 
     /**
@@ -53,6 +58,11 @@ class PatientController extends Controller
     public function update(StorePatientRequest $request, string $id) : JsonResponse|array
     {
         $patient = $this->patientService->update($request->validated(), $id);
+
+        if ($patient === 'prescriber_KO') {
+            return response()->json(['output' => 'Patient could not be updated: Prescriber Id does not exist']);
+        }
+
         return response()->json(['output' => 'Patient updated successfully', 'patient' => $patient]);
     }
 

@@ -52,13 +52,28 @@ class PrescriptionController extends Controller
     public function store (StorePrescriptionRequest $request) : JsonResponse|array
     {
         $prescription = $this->prescriptionService->store($request->validated());
-        return response()->json(['output' => 'Prescription added successfully', 'prescription' => $prescription]);
+
+        return match ($prescription) {
+            'prescriber_KO' => response()->json(['output' => 'Prescription could not be added: Prescriber Id does not exist']),
+            'patient_KO' => response()->json(['output' => 'Prescription could not be added: Patient Id does not exist']),
+            'consultation_KO' => response()->json(['output' => 'Prescription could not be added: Consultation Id does not exist']),
+            'record_KO' => response()->json(['output' => 'Prescription could not be added: Record Id does not exist']),
+            default => response()->json(['output' => 'Prescription added successfully', 'prescription' => $prescription]),
+        };
+
     }
 
     public function update (StorePrescriptionRequest $request, int $id) : JsonResponse|array
     {
         $prescription = $this->prescriptionService->update($request->validated(), $id);
-        return response()->json(['output' => 'Prescription updated successfully', 'prescription' => $prescription]);
+
+        return match ($prescription) {
+            'prescriber_KO' => response()->json(['output' => 'Prescription could not be updated: Prescriber Id does not exist']),
+            'patient_KO' => response()->json(['output' => 'Prescription could not be updated: Patient Id does not exist']),
+            'consultation_KO' => response()->json(['output' => 'Prescription could not be updated: Consultation Id does not exist']),
+            'record_KO' => response()->json(['output' => 'Prescription could not be updated: Record Id does not exist']),
+            default => response()->json(['output' => 'Prescription updated successfully', 'prescription' => $prescription]),
+        };
     }
 
     public function delete (int $id) : ?JsonResponse

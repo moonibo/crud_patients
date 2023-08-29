@@ -51,7 +51,7 @@ class SpecialityControllerTest extends TestCase
             'name' => 'Example Speciality 2',
         ];
 
-        $response = $this->postJson('/api/specialities/update/1', $update_speciality);
+        $response = $this->putJson('/api/specialities/1', $update_speciality);
         $response->assertStatus(200);
         //$response->assertJson(['output' => 'Speciality added successfully', 'Speciality' => $speciality]);
         $this->assertDatabaseHas('specialities',[

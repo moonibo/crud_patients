@@ -5,7 +5,8 @@ namespace App\Services;
 class PatientService
 {
     public function __construct(
-        private readonly PatientInterface $patient
+        private readonly PatientInterface $patient,
+        private readonly PrescriberInterface $prescriber
     ) {
     }
 
@@ -36,26 +37,39 @@ class PatientService
 
     public function store(array $attributes)
     {
-        switch($attributes["gender"]) {
-            case "H":
-                $attributes["gender"] = 0;
+        switch($attributes['gender']) {
+            case 'H':
+                $attributes['gender'] = 0;
                 break;
-            case "M":
-                $attributes["gender"] = 1;
+            case 'M':
+                $attributes['gender'] = 1;
                 break;
         }
+
+        if (isset($attributes['prescriber_id'])) {
+            if (!$this->prescriber->find($attributes['prescriber_id'])) {
+                return 'prescriber_KO';
+            }
+        }
+
         return $this->patient->create($attributes);
     }
 
     public function update(array $attributes, int $id)
     {
-        switch($attributes["gender"]) {
-            case "H":
-                $attributes["gender"] = 0;
+        switch($attributes['gender']) {
+            case 'H':
+                $attributes['gender'] = 0;
                 break;
-            case "M":
-                $attributes["gender"] = 1;
+            case 'M':
+                $attributes['gender'] = 1;
                 break;
+        }
+
+        if (isset($attributes['prescriber_id'])) {
+            if (!$this->prescriber->find($attributes['prescriber_id'])) {
+                return 'prescriber_KO';
+            }
         }
 
         return $this->patient->update($attributes, $id);

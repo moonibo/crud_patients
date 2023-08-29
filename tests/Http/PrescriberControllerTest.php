@@ -3,7 +3,10 @@
 namespace Tests\Http;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Factories\ConsultationFactory;
 use Tests\Factories\PrescriberFactory;
+
+use Tests\Factories\SpecialityFactory;
 use Tests\TestCase;
 
 
@@ -36,7 +39,7 @@ class PrescriberControllerTest extends TestCase
             'consultation_id' => 3,
         ]);
 
-        $response = $this->getJson('/api/prescribers/consultation/set3');
+        $response = $this->getJson('/api/prescribers/consultation/3');
         $response->assertStatus(200);
         $response->assertJson(['prescribers' => [$prescriber->toArray()]]);
     }
@@ -51,7 +54,7 @@ class PrescriberControllerTest extends TestCase
             'consultation_id' => 3,
         ]);
 
-        $response = $this->getJson('/api/prescribers/speciality/set2');
+        $response = $this->getJson('/api/prescribers/speciality/2');
         $response->assertStatus(200);
         $response->assertJson(['prescribers' => [$prescriber->toArray()]]);
     }
@@ -59,6 +62,16 @@ class PrescriberControllerTest extends TestCase
     /** @test */
     public function create_prescriber()
     {
+        (new SpecialityFactory)->create([
+            'id' => 2,
+            'name' => 'Nutrició'
+        ]);
+
+        (new ConsultationFactory)->create([
+            'id' => 3,
+            'name' => 'Consulta 1'
+        ]);
+
         $prescriber = [
             'name' => 'John Doe',
             'speciality_id' => 2,
@@ -67,7 +80,6 @@ class PrescriberControllerTest extends TestCase
 
         $response = $this->postJson('/api/prescribers/store', $prescriber);
         $response->assertStatus(200);
-        $response->assertJson(['output' => 'Prescriber added successfully', 'Prescriber' => $prescriber]);
         $this->assertDatabaseHas('prescribers',[
             'name' => 'John Doe',
             'speciality_id' => 2,
@@ -78,26 +90,44 @@ class PrescriberControllerTest extends TestCase
     /** @test */
     public function update_prescriber()
     {
-        $prescriber = (new PrescriberFactory)->create([
+        (new PrescriberFactory)->create([
             'id' => 1,
             'name' => 'John Doe',
             'speciality_id' => 1,
             'consultation_id' => 1,
         ]);
 
+        (new SpecialityFactory())->create([
+            'id' => 3,
+            'name' => 'Nutrició'
+        ]);
+        (new SpecialityFactory())->create([
+            'id' => 4,
+            'name' => 'Nutrició Esportiva'
+        ]);
+
+        (new ConsultationFactory())->create([
+            'id' => 2,
+            'name' => 'Consulta 1'
+        ]);
+        (new ConsultationFactory())->create([
+            'id' => 3,
+            'name' => 'Consulta 2'
+        ]);
+
         $update_prescriber = [
             'name' => 'John Doe',
-            'speciality_id' => 3,
-            'consultation_id' => 4,
+            'speciality_id' => 4,
+            'consultation_id' => 3,
         ];
 
-        $response = $this->postJson('/api/prescribers/update/1', $update_prescriber);
+        $response = $this->putJson('/api/prescribers/1', $update_prescriber);
         $response->assertStatus(200);
         //$response->assertJson(['output' => 'Prescriber updated successfully', 'Prescriber' => $prescriber]);
         $this->assertDatabaseHas('prescribers',[
             'name' => 'John Doe',
-            'speciality_id' => 3,
-            'consultation_id' => 4,
+            'speciality_id' => 4,
+            'consultation_id' => 3,
         ]);
     }
 

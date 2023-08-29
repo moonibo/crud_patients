@@ -51,7 +51,7 @@ class ConsultationControllerTest extends TestCase
             'name' => 'Example Consultation 2',
         ];
 
-        $response = $this->postJson('/api/consultations/update/1', $update_consultation);
+        $response = $this->putJson('/api/consultations/1', $update_consultation);
         $response->assertStatus(200);
         //$response->assertJson(['output' => 'Consultation added successfully', 'Consultation' => $consultation]);
         $this->assertDatabaseHas('consultations',[

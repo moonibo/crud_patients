@@ -5,7 +5,9 @@ namespace App\Services;
 class PrescriberService
 {
     public function __construct(
-        private readonly PrescriberInterface $prescriber
+        private readonly PrescriberInterface $prescriber,
+        private readonly SpecialityInterface $speciality,
+        private readonly ConsultationInterface $consultation
     ) {
     }
 
@@ -29,14 +31,38 @@ class PrescriberService
         return $this->prescriber->findSpecialityById($speciality_id);
     }
 
+    public function findExistingIds (array $attributes): bool|string
+    {
+        if (!$this->speciality->find($attributes['speciality_id'])) {
+            return 'prescriber_KO';
+        }
+
+        if (!$this->consultation->find($attributes['consultation_id'])) {
+            return 'patient_KO';
+        }
+        return 'OK';
+    }
+
     public function store(array $attributes)
     {
-        return $this->prescriber->create($attributes);
+        $message = $this->findExistingIds($attributes);
+
+        if ($message === 'OK') {
+            return $this->prescriber->create($attributes);
+        } else {
+            return $message;
+        }
     }
 
     public function update(array $attributes, int $id)
     {
-        return $this->prescriber->update($attributes, $id);
+        $message = $this->findExistingIds($attributes);
+
+        if ($message === 'OK') {
+            return $this->prescriber->update($attributes, $id);
+        } else {
+            return $message;
+        }
     }
 
     public function delete(int $id)

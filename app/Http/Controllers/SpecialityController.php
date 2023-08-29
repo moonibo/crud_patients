@@ -47,6 +47,7 @@ class SpecialityController extends Controller
     public function update(StoreSpecialityRequest $request, string $id) : JsonResponse|array
     {
         $speciality = $this->specialityService->update($request->validated(), $id);
+
         return response()->json(['output' => 'Speciality updated successfully', 'Speciality' => $speciality]);
     }
 

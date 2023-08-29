@@ -43,7 +43,7 @@ class RecordController extends Controller
     {
         $record = $this->recordService->findActiveRecord($patient_id, $prescriber_id);
 
-        if ($record === null | empty($record)) {
+        if ($record === null | empty($record[0])) {
             return response()->json(['output' => 'A record with these parameters does not exist']);
         }
         if (Carbon::parse($record[0]->end_date)->isPast()) {
@@ -57,13 +57,23 @@ class RecordController extends Controller
     public function store (StoreRecordRequest $request) : JsonResponse|array
     {
         $record = $this->recordService->store($request->validated());
-        return response()->json(['output' => 'Record added successfully', 'record' => $record]);
+
+        return match ($record) {
+            'prescriber_KO' => response()->json(['output' => 'Record could not be added: Prescriber Id does not exist']),
+            'patient_KO' => response()->json(['output' => 'Record could not be added: Patient Id does not exist']),
+            default => response()->json(['output' => 'Record added successfully', 'prescription' => $record]),
+        };
     }
 
     public function update (StoreRecordRequest $request, int $id) : JsonResponse|array
     {
         $record = $this->recordService->update($request->validated(), $id);
-        return response()->json(['output' => 'Record updated successfully', 'record' => $record]);
+
+        return match ($record) {
+            'prescriber_KO' => response()->json(['output' => 'Record could not be updated: Prescriber Id does not exist']),
+            'patient_KO' => response()->json(['output' => 'Record could not be updated: Patient Id does not exist']),
+            default => response()->json(['output' => 'Record updated successfully', 'prescription' => $record]),
+        };
     }
 
     public function delete (int $id) : ?JsonResponse

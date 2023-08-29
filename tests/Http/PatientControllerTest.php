@@ -3,7 +3,10 @@
 namespace Tests\Http;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Factories\ConsultationFactory;
 use Tests\Factories\PatientFactory;
+use Tests\Factories\PrescriberFactory;
+use Tests\Factories\SpecialityFactory;
 use Tests\TestCase;
 
 
@@ -45,7 +48,7 @@ class PatientControllerTest extends TestCase
             'prescriber_id' => 2
         ]);
 
-        $response = $this->getJson('/api/patients/prescribers/set2');
+        $response = $this->getJson('/api/patients/prescribers/2');
         $response->assertStatus(200);
         $response->assertJson(['patients' => [$user->toArray()]]);
     }
@@ -53,25 +56,58 @@ class PatientControllerTest extends TestCase
     /** @test */
     public function create_user()
     {
+        (new PrescriberFactory)->create([
+            'id' => 1,
+            'name' => 'Test',
+            'speciality_id' => 1,
+            'consultation_id' => 2
+        ]);
+        (new SpecialityFactory)->create([
+            'id' => 1,
+            'name' => 'Test',
+        ]);
+        (new ConsultationFactory)->create([
+            'id' => 2,
+            'name' => 'Test'
+        ]);
+
         $user = [
             'name' => 'Monica',
             'surname' => 'Test',
             'mail' => 'monicatest@test.com',
-            'gender' => 'M'
+            'gender' => 'M',
+            'prescriber_id' => 1
         ];
 
         $response = $this->postJson('/api/patients/store', $user);
         $response->assertStatus(200);
-        //$response->assertJson(['output' => 'Patient added successfully', 'patient' => $user]);
         $this->assertDatabaseHas('patients',[
+            'name' => 'Monica',
+            'surname' => 'Test',
             'mail' => 'monicatest@test.com',
+            'gender' => 1,
+            'prescriber_id' => 1
         ]);
     }
 
     /** @test */
     public function update_user()
     {
-        $user = (new PatientFactory)->create([
+        (new PrescriberFactory)->create([
+            'id' => 1,
+            'name' => 'Test',
+            'speciality_id' => 1,
+            'consultation_id' => 2
+        ]);
+        (new SpecialityFactory)->create([
+            'id' => 1,
+            'name' => 'Test',
+        ]);
+        (new ConsultationFactory)->create([
+            'id' => 2,
+            'name' => 'Test'
+        ]);
+        (new PatientFactory)->create([
             'id' => 1,
             'name' => 'Monica',
             'surname' => 'Test',
@@ -85,9 +121,10 @@ class PatientControllerTest extends TestCase
             'surname' => 'Test',
             'mail' => 'mariatest@test.com',
             'gender' => 'M',
+            'prescriber_id' => 1
         ];
 
-        $response = $this->postJson('/api/patients/update/1', $update_user);
+        $response = $this->putJson('/api/patients/1', $update_user);
         $response->assertStatus(200);
         $this->assertDatabaseHas('patients',[
             'id' => 1,
@@ -95,14 +132,14 @@ class PatientControllerTest extends TestCase
             'surname' => 'Test',
             'mail' => 'mariatest@test.com',
             'gender' => 1,
-            'prescriber_id' => null
+            'prescriber_id' => 1
         ]);
     }
 
     /** @test */
     public function delete_user()
     {
-        $user = (new PatientFactory)->create([
+        (new PatientFactory)->create([
             'id' => 1,
             'name' => 'Monica',
             'surname' => 'Test',

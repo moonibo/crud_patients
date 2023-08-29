@@ -2,8 +2,13 @@
 
 namespace Tests\Http;
 
+use App\Models\Patient;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Factories\ConsultationFactory;
+use Tests\Factories\PatientFactory;
+use Tests\Factories\PrescriberFactory;
 use Tests\Factories\PrescriptionFactory;
+use Tests\Factories\RecordFactory;
 use Tests\TestCase;
 
 
@@ -42,7 +47,7 @@ class PrescriptionControllerTest extends TestCase
             'days' => 100,
         ]);
 
-        $response = $this->getJson('/api/prescriptions/patient/set5');
+        $response = $this->getJson('/api/prescriptions/patient/5');
         $response->assertStatus(200);
         $response->assertJson(['prescriptions' => [$prescription->toArray()]]);
     }
@@ -60,7 +65,7 @@ class PrescriptionControllerTest extends TestCase
             'days' => 100,
         ]);
 
-        $response = $this->getJson('/api/prescriptions/consultation/set1');
+        $response = $this->getJson('/api/prescriptions/consultation/1');
         $response->assertStatus(200);
         $response->assertJson(['prescriptions' => [$prescription->toArray()]]);
     }
@@ -78,7 +83,7 @@ class PrescriptionControllerTest extends TestCase
             'days' => 100,
         ]);
 
-        $response = $this->getJson('/api/prescriptions/record/set3');
+        $response = $this->getJson('/api/prescriptions/record/3');
         $response->assertStatus(200);
         $response->assertJson(['prescriptions' => [$prescription->toArray()]]);
     }
@@ -86,6 +91,35 @@ class PrescriptionControllerTest extends TestCase
     /** @test */
     public function create_prescription()
     {
+        (new PrescriberFactory)->create([
+            'id' => 2,
+            'name' => 'Test',
+            'speciality_id' => 1,
+            'consultation_id' => 1
+        ]);
+
+        (new PatientFactory)->create([
+            'id' => 5,
+            'name' => 'Monica',
+            'surname' => 'Test',
+            'mail' => 'monica@test.com',
+            'gender' => 1,
+            'prescriber_id' => 2,
+        ]);
+
+        (new ConsultationFactory)->create([
+            'id' => 1,
+            'name' => 'Consulta Test',
+        ]);
+
+        (new RecordFactory)->create([
+            'id' => 3,
+            'prescriber_id' => 2,
+            'patient_id' => 5,
+            'start_date' => '2023-08-01',
+            'end_date' => '2023-12-01'
+        ]);
+
         $prescription = [
             'prescriber_id' => 2,
             'patient_id' => 5,
@@ -111,6 +145,35 @@ class PrescriptionControllerTest extends TestCase
     /** @test */
     public function update_prescription()
     {
+        (new PrescriberFactory)->create([
+            'id' => 1,
+            'name' => 'Test',
+            'speciality_id' => 1,
+            'consultation_id' => 1
+        ]);
+
+        (new PatientFactory)->create([
+            'id' => 3,
+            'name' => 'Monica',
+            'surname' => 'Test',
+            'mail' => 'monica@test.com',
+            'gender' => 1,
+            'prescriber_id' => 1,
+        ]);
+
+        (new ConsultationFactory)->create([
+            'id' => 2,
+            'name' => 'Consulta Test',
+        ]);
+
+        (new RecordFactory)->create([
+            'id' => 3,
+            'prescriber_id' => 2,
+            'patient_id' => 5,
+            'start_date' => '2023-08-01',
+            'end_date' => '2023-12-01'
+        ]);
+
         $prescription = (new PrescriptionFactory)->create([
             'id' => 1,
             'prescriber_id' => 1,
@@ -130,7 +193,7 @@ class PrescriptionControllerTest extends TestCase
             'days' => 136,
         ];
 
-        $response = $this->postJson('/api/prescriptions/update/1', $update_prescription);
+        $response = $this->putJson('/api/prescriptions/1', $update_prescription);
         $response->assertStatus(200);
         //$response->assertJson(['output' => 'Prescriber updated successfully', 'Prescriber' => $prescriber]);
         $this->assertDatabaseHas('prescriptions',[
