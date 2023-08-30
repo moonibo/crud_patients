@@ -41,14 +41,10 @@ class RecordController extends Controller
 
     public function showRecordByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id): JsonResponse|array
     {
-        $record = $this->recordService->findActiveRecord($patient_id, $prescriber_id);
+        $record = $this->recordService->findRecordByPatientIdAndPrescriberId($patient_id, $prescriber_id);
 
-        if ($record === null | empty($record[0])) {
+        if ($record === null | empty($record)) {
             return response()->json(['output' => 'A record with these parameters does not exist']);
-        }
-        if (Carbon::parse($record[0]->end_date)->isPast()) {
-            $newRecord = $this->recordService->createNewRecordWhenExpired($patient_id, $prescriber_id);
-            return response()->json(['output' => 'A record with these parameters expired, a new record was created', 'record' => $newRecord]);
         }
 
         return response()->json(['record' => $record]);

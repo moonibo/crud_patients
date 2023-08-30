@@ -121,7 +121,7 @@ class RecordServiceTest extends TestCase
         });
 
         $service = new RecordService($repository, $prescriber, $patient, $prescription);
-        $record = $service->findActiveRecord(4,3);
+        $record = $service->findRecordByPatientIdAndPrescriberId(4,3);
 
         $this->assertEquals([
             'prescriber_id' => 3,

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Record;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class RecordService
 {
@@ -74,9 +75,33 @@ class RecordService
         return $this->record->delete($id);
     }
 
-    public function findActiveRecord(int $patient_id, int $prescriber_id)
+    public function findRecordByPatientIdAndPrescriberId(int $patient_id, int $prescriber_id)
     {
-        return $this->record->findRecordByPatientIdAndPrescriberId($patient_id, $prescriber_id);
+        $record = $this->record->findRecordByPatientIdAndPrescriberId($patient_id, $prescriber_id);
+
+        if (Carbon::parse($record[0]->end_date)->isPast()) {
+            $new_record = $this->createNewRecordWhenExpired($patient_id, $prescriber_id);
+            $this->createNewPrescriptionWhenExpired($new_record);
+            return $new_record;
+        }
+
+        return $record;
+    }
+
+    public function findActiveRecords($records): array
+    {
+        $open_records = new Collection();
+        $closed_records = new Collection();
+
+        foreach ($records as $record)
+            if (Carbon::parse($record['end_date'])->isPast()) {
+                $closed_records->push($record);
+            } else {
+                $open_records->push($record);
+            }
+
+        return ['open' => $open_records,
+                'closed' => $closed_records];
     }
 
     public function createNewRecordWhenExpired(int $patient_id, int $prescriber_id)
@@ -88,13 +113,10 @@ class RecordService
             'end_date' => Carbon::now()->addMonths(3)->toDateString(),
         ];
 
-        $created_record = $this->record->create($new_record_attr);
-        $this->createNewPrescriptionWhenRecordExpired($created_record);
-
-        return $created_record;
+        return $this->record->create($new_record_attr);
     }
 
-    public function createNewPrescriptionWhenRecordExpired (Record $record): void
+    public function createNewPrescriptionWhenExpired (Record $record): void
     {
         $new_prescription_attr = [
             'prescriber_id' => $record->prescriber_id,

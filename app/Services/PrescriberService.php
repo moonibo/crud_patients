@@ -34,11 +34,11 @@ class PrescriberService
     public function findExistingIds (array $attributes): bool|string
     {
         if (!$this->speciality->find($attributes['speciality_id'])) {
-            return 'prescriber_KO';
+            return 'speciality_KO';
         }
 
         if (!$this->consultation->find($attributes['consultation_id'])) {
-            return 'patient_KO';
+            return 'consultation_KO';
         }
         return 'OK';
     }

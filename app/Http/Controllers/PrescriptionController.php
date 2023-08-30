@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePrescriptionRequest;
 use App\Services\PrescriptionService;
+use App\Services\RecordService;
 use Illuminate\Http\JsonResponse;
 
 class PrescriptionController extends Controller
 {
-    public function __construct(private readonly PrescriptionService $prescriptionService)
+    public function __construct(private readonly PrescriptionService $prescriptionService,
+                                private readonly RecordService $recordService
+    )
     {
     }
 

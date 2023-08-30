@@ -2,13 +2,17 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+
 class PrescriptionService
 {
     public function __construct(private readonly PrescriptionInterface $prescription,
                                 private readonly PrescriberInterface $prescriber,
                                 private readonly PatientInterface $patient,
                                 private readonly ConsultationInterface $consultation,
-                                private readonly RecordInterface $record
+                                private readonly RecordInterface $record,
+                                private readonly RecordService $recordService
     ){
     }
 
@@ -68,9 +72,30 @@ class PrescriptionService
 
         if ($message === 'OK') {
             return $this->prescription->create($attributes);
-        } else {
-            return $message;
         }
+
+        if ($message === 'record_KO') {
+            $records = $this->recordService->findPatientById($attributes['patient_id']);
+            $open_closed_records = $this->recordService->findActiveRecords($records->toArray());
+            $open_records = $open_closed_records['open'];
+
+            if ($open_records->isNotEmpty()) {
+                $latest_record = $open_records->pop();
+                foreach ($open_records as $open) {
+                    $open['end_date'] = Carbon::now()->toDateString();
+                    unset($open['created_at'], $open['updated_at']);
+                    $this->recordService->update($open, $open['id']);
+                }
+                $attributes['record_id'] = $latest_record['id'];
+                return $this->prescription->create($attributes);
+
+            } else {
+                $created_record = $this->recordService->createNewRecordWhenExpired($attributes['patient_id'], $attributes['prescriber_id']);
+                $attributes['record_id'] = $created_record['id'];
+                return $this->prescription->create($attributes);
+            }
+        }
+        return $message;
     }
 
     public function update (array $attributes, int $id)

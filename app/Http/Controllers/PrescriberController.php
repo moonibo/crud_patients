@@ -52,8 +52,8 @@ class PrescriberController extends Controller
         $prescriber = $this->prescriberService->store($request->validated());
 
         return match ($prescriber) {
-            'prescriber_KO' => response()->json(['output' => 'Prescriber could not be added: Prescriber Id does not exist']),
-            'patient_KO' => response()->json(['output' => 'Prescriber could not be added: Patient Id does not exist']),
+            'speciality_KO' => response()->json(['output' => 'Prescriber could not be added: Speciality Id does not exist']),
+            'consultation_KO' => response()->json(['output' => 'Prescriber could not be added: Consultation Id does not exist']),
             default => response()->json(['output' => 'Prescriber added successfully', 'prescription' => $prescriber]),
         };
     }
@@ -66,8 +66,8 @@ class PrescriberController extends Controller
         $prescriber = $this->prescriberService->update($request->validated(), $id);
 
         return match ($prescriber) {
-            'prescriber_KO' => response()->json(['output' => 'Prescriber could not be updated: Prescriber Id does not exist']),
-            'patient_KO' => response()->json(['output' => 'Patient could not be updated: Patient Id does not exist']),
+            'speciality_KO' => response()->json(['output' => 'Prescriber could not be updated: Speciality Id does not exist']),
+            'consultation_KO' => response()->json(['output' => 'Patient could not be updated: Consultation Id does not exist']),
             default => response()->json(['output' => 'Prescriber updated successfully', 'prescription' => $prescriber]),
         };
     }
