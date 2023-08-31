@@ -18,6 +18,9 @@ interface RecordInterface
 
     public function findRecordByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id);
 
+    public function findOpenRecordsByPatientAndPrescriberId (int $patient_id, int $prescriber_id);
+
+    public function findLatestOpenRecordByPatientAndPrescriberId (int $patient_id, int $prescriber_id);
 
     public function delete (int $id);
 }

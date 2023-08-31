@@ -88,20 +88,14 @@ class RecordService
         return $record;
     }
 
-    public function findActiveRecords($records): array
+    public function findOpenRecordsByPatientAndPrescriberId (int $patient_id, int $prescriber_id)
     {
-        $open_records = new Collection();
-        $closed_records = new Collection();
+        return $this->record->findOpenRecordsByPatientAndPrescriberId($patient_id, $prescriber_id);
+    }
 
-        foreach ($records as $record)
-            if (Carbon::parse($record['end_date'])->isPast()) {
-                $closed_records->push($record);
-            } else {
-                $open_records->push($record);
-            }
-
-        return ['open' => $open_records,
-                'closed' => $closed_records];
+    public function findLatestOpenRecordByPatientAndPrescriberId(mixed $patient_id, mixed $prescriber_id)
+    {
+        return $this->record->findLatestOpenRecordByPatientAndPrescriberId($patient_id, $prescriber_id);
     }
 
     public function createNewRecordWhenExpired(int $patient_id, int $prescriber_id)
@@ -129,4 +123,5 @@ class RecordService
 
         $this->prescription->create($new_prescription_attr);
     }
+
 }

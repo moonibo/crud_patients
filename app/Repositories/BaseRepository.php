@@ -65,9 +65,22 @@ class BaseRepository
         return $this->query()->where(['record_id' => $record_id])->get();
     }
 
-    public function findRecordByPatientIdAndPrescriberId(int $patient_id, int $prescriber_id) : array|Collection
+    public function findRecordByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id) : array|Collection
     {
         return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])->get();
+    }
+
+    public function findOpenRecordsByPatientAndPrescriberId (int $patient_id, int $prescriber_id)
+    {
+        return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])->where('end_date', '>', Carbon::now());
+    }
+
+    public function findLatestOpenRecordByPatientAndPrescriberId(int $patient_id, int $prescriber_id)
+    {
+        return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])
+            ->where('end_date', '>', Carbon::now())
+            ->latest('created_at')
+            ->first();
     }
 
     public function delete(int $id): Model|bool

@@ -75,23 +75,16 @@ class PrescriptionService
         }
 
         if ($message === 'record_KO') {
-            $records = $this->recordService->findPatientById($attributes['patient_id']);
-            $open_closed_records = $this->recordService->findActiveRecords($records->toArray());
-            $open_records = $open_closed_records['open'];
+            $record = $this->recordService->findLatestOpenRecordByPatientAndPrescriberId($attributes['patient_id'], $attributes['prescriber_id']);
 
-            if ($open_records->isNotEmpty()) {
-                $latest_record = $open_records->pop();
-                foreach ($open_records as $open) {
-                    $open['end_date'] = Carbon::now()->toDateString();
-                    unset($open['created_at'], $open['updated_at']);
-                    $this->recordService->update($open, $open['id']);
-                }
-                $attributes['record_id'] = $latest_record['id'];
+            if ($record) {
+                $record->toArray();
+                $attributes['record_id'] = $record['id'];
                 return $this->prescription->create($attributes);
 
             } else {
-                $created_record = $this->recordService->createNewRecordWhenExpired($attributes['patient_id'], $attributes['prescriber_id']);
-                $attributes['record_id'] = $created_record['id'];
+                $new_record = $this->recordService->createNewRecordWhenExpired($attributes['patient_id'], $attributes['prescriber_id']);
+                $attributes['record_id'] = $new_record['id'];
                 return $this->prescription->create($attributes);
             }
         }
