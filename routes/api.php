@@ -1,8 +1,43 @@
 <?php
 
+namespace Core\MyPatients\Infrastructure\Http\Controllers;
+
+
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\CreateConsultation;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\DeleteConsultation;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\FindAllConsultations;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\FindConsultationById;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\UpdateConsultation;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\DeletePatient;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\FindAllPatients;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\FindPatientById;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\FindPatientByPrescriberId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\UpdatePatient;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\CreatePrescriber;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\DeletePrescriber;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\FindAllPrescribers;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\FindPrescriberByConsultationId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\FindPrescriberById;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\FindPrescriberBySpecialityId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\UpdatePrescriber;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\CreatePrescription;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindAllPrescriptions;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByConsultationId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionById;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByPatientId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByRecordId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\UpdatePrescription;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\CreateRecord;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\UpdateRecord;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\CreateSpeciality;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\DeleteSpeciality;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\FindAllSpecialities;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\FindSpecialityById;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\UpdateSpeciality;
+use App\Http\Middleware\AcceptJson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PatientController;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\CreatePatient;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,41 +54,48 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['namespace' => 'App\Http\Controllers', 'middleware' => \App\Http\Middleware\AcceptJson::class], function () {
-    Route::get('/patients', 'PatientController@index' )->name('patients_index');
-    Route::get('/patients/{id}', 'PatientController@show')->name('patients_find');
-    Route::get('/patients/prescribers/{prescriber_id}', 'PatientController@findPrescriberById')->name('patients_find_prescriber');
-    Route::post('/patients/store','PatientController@store')->name('patients_store');
-    Route::put('/patients/{id}', 'PatientController@update')->name('patients_update');
-    Route::post('/patients/delete/{id}', 'PatientController@delete')->name('patients_delete');
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Patient', 'middleware' => AcceptJson::class], function () {
+    Route::get('/patients', FindAllPatients::class)->name('patients_index');
+    Route::get('/patients/{id}', FindPatientById::class)->name('patients_find');
+    Route::get('/patients/prescribers/{prescriber_id}', FindPatientByPrescriberId::class)->name('patients_find_prescriber');
+    Route::post('/patients/store', CreatePatient::class)->name('patients_store');
+    Route::put('/patients/{id}', UpdatePatient::class)->name('patients_update');
+    Route::post('/patients/delete/{id}', DeletePatient::class)->name('patients_delete');
+});
 
-    Route::get('/specialities', 'SpecialityController@index' )->name('specialities_index');
-    Route::get('/specialities/{id}', 'SpecialityController@show')->name('specialities_find');
-    Route::post('/specialities/store','SpecialityController@store')->name('specialities_store');
-    Route::put('/specialities/{id}', 'SpecialityController@update')->name('specialities_update');
-    Route::post('/specialities/delete/{id}', 'SpecialityController@delete')->name('specialities_delete');
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality', 'middleware' => AcceptJson::class], function () {
+    Route::get('/specialities', FindAllSpecialities::class)->name('specialities_index');
+    Route::get('/specialities/{id}', FindSpecialityById::class)->name('specialities_find');
+    Route::post('/specialities/store', CreateSpeciality::class)->name('specialities_store');
+    Route::put('/specialities/{id}', UpdateSpeciality::class)->name('specialities_update');
+    Route::post('/specialities/delete/{id}', DeleteSpeciality::class)->name('specialities_delete');
+});
 
-    Route::get('/consultations', 'ConsultationController@index' )->name('consultations_index');
-    Route::get('/consultations/{id}', 'ConsultationController@show')->name('consultations_find');
-    Route::post('/consultations/store','ConsultationController@store')->name('consultations_store');
-    Route::put('/consultations/{id}', 'ConsultationController@update')->name('consultations_update');
-    Route::post('/consultations/delete/{id}', 'ConsultationController@delete')->name('consultations_delete');
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation', 'middleware' => AcceptJson::class], function () {
+    Route::get('/consultations', FindAllConsultations::class)->name('consultations_index');
+    Route::get('/consultations/{id}', FindConsultationById::class)->name('consultations_find');
+    Route::post('/consultations/store', CreateConsultation::class)->name('consultations_store');
+    Route::put('/consultations/{id}', UpdateConsultation::class)->name('consultations_update');
+    Route::post('/consultations/delete/{id}', DeleteConsultation::class)->name('consultations_delete');
+});
 
-    Route::get('/prescribers', 'PrescriberController@index' )->name('prescribers_index');
-    Route::get('/prescribers/{id}', 'PrescriberController@show')->name('prescribers_find');
-    Route::get('/prescribers/consultation/{consultation_id}', 'PrescriberController@findConsultationById')->name('prescribers_find_consultation');
-    Route::get('/prescribers/speciality/{speciality_id}', 'PrescriberController@findSpecialityById')->name('prescribers_find_speciality');
-    Route::post('/prescribers/store','PrescriberController@store')->name('prescribers_store');
-    Route::put('/prescribers/{id}', 'PrescriberController@update')->name('prescribers_update');
-    Route::post('/prescribers/delete/{id}', 'PrescriberController@delete')->name('prescribers_delete');
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber', 'middleware' => AcceptJson::class], function () {
+    Route::get('/prescribers', FindAllPrescribers::class)->name('prescribers_index');
+    Route::get('/prescribers/{id}', FindPrescriberById::class)->name('prescribers_find');
+    Route::get('/prescribers/consultation/{consultation_id}', FindPrescriberByConsultationId::class)->name('prescribers_find_consultation');
+    Route::get('/prescribers/speciality/{speciality_id}', FindPrescriberBySpecialityId::class)->name('prescribers_find_speciality');
+    Route::post('/prescribers/store', CreatePrescriber::class)->name('prescribers_store');
+    Route::put('/prescribers/{id}', UpdatePrescriber::class)->name('prescribers_update');
+    Route::post('/prescribers/delete/{id}', DeletePrescriber::class)->name('prescribers_delete');
+});
 
-    Route::get('/prescriptions', 'PrescriptionController@index' )->name('prescriptions_index');
-    Route::get('/prescriptions/{id}', 'PrescriptionController@show')->name('prescriptions_find');
-    Route::get('/prescriptions/patient/{patient_id}', 'PrescriptionController@findPatientById')->name('prescriptions_find_patient');
-    Route::get('/prescriptions/consultation/{consultation_id}', 'PrescriptionController@findConsultationById')->name('prescriptions_find_consultation');
-    Route::get('/prescriptions/record/{record_id}', 'PrescriptionController@findRecordById')->name('prescriptions_find_record');
-    Route::post('/prescriptions/store','PrescriptionController@store')->name('prescriptions_store');
-    Route::put('/prescriptions/{id}', 'PrescriptionController@update')->name('prescriptions_update');
+    Route::get('/prescriptions', FindAllPrescriptions::class )->name('prescriptions_index');
+    Route::get('/prescriptions/{id}', FindPrescriptionById::class)->name('prescriptions_find');
+    Route::get('/prescriptions/patient/{patient_id}', FindPrescriptionByPatientId::class)->name('prescriptions_find_patient');
+    Route::get('/prescriptions/consultation/{consultation_id}', FindPrescriptionByConsultationId::class)->name('prescriptions_find_consultation');
+    Route::get('/prescriptions/record/{record_id}', FindPrescriptionByRecordId::class)->name('prescriptions_find_record');
+    Route::post('/prescriptions/store',CreatePrescription::class)->name('prescriptions_store');
+    Route::put('/prescriptions/{id}', UpdatePrescription::class)->name('prescriptions_update');
     Route::post('/prescriptions/delete/{id}', 'PrescriptionController@delete')->name('prescriptions_delete');
 
     Route::get('/records', 'RecordController@index' )->name('prescriptions_index');
@@ -62,8 +104,8 @@ Route::group(['namespace' => 'App\Http\Controllers', 'middleware' => \App\Http\M
     Route::get('/records/patient/{patient_id}', 'RecordController@findPatientById')->name('records_find_patient');
     Route::get('/records/patient/{patient_id}', 'RecordController@findPatientById')->name('records_find_patient');
     Route::get('/records/patient&prescriber/{patient_id}/{prescriber_id}', 'RecordController@showRecordByPatientIdAndPrescriberId')->name('records_find_recordbypatientandprescriberid');
-    Route::post('/records/store','RecordController@store')->name('prescriptions_store');
-    Route::put('/records/{id}', 'RecordController@update')->name('prescriptions_update');
+    Route::post('/records/store',CreateRecord::class)->name('prescriptions_store');
+    Route::put('/records/{id}', UpdateRecord::class)->name('prescriptions_update');
     Route::post('/records/delete/{id}', 'RecordController@delete')->name('prescriptions_delete');
-});
+
 

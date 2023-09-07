@@ -16,6 +16,7 @@ use App\Services\RecordInterface;
 use App\Services\SpecialityInterface;
 use Illuminate\Support\ServiceProvider;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +30,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ConsultationInterface::class, ConsultationRepository::class);
         $this->app->bind(RecordInterface::class, RecordRepository::class);
         $this->app->bind(PrescriptionInterface::class, PrescriptionRepository::class);
+
+        $this->app->bind(\App\Core\MyPatients\Domain\Patient\Contracts\PatientInterface::class, PatientRepository::class);
+        $this->app->bind(\App\Core\MyPatients\Domain\Prescriber\Contracts\PrescriberInterface::class, PrescriberRepository::class);
+        $this->app->bind(\App\Core\MyPatients\Domain\Speciality\Contracts\SpecialityInterface::class, SpecialityRepository::class);
+        $this->app->bind(\App\Core\MyPatients\Domain\Consultation\Contracts\ConsultationInterface::class, ConsultationRepository::class);
+        $this->app->bind(\App\Core\MyPatients\Domain\Prescription\Contracts\PrescriptionInterface::class, PrescriptionRepository::class);
+        $this->app->bind(\App\Core\MyPatients\Domain\Record\Contracts\RecordInterface::class, RecordRepository::class);
     }
 
     /**

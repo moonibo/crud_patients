@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Core\MyPatients\Application\Prescription\UpdatePrescription;
+
+class UpdatePrescriptionCommand
+{
+    private int $id;
+    private int $prescriber_id;
+    private int $patient_id;
+    private int $consultation_id;
+    private int $record_id;
+    private int $doses_per_day;
+    private int $days;
+
+    public function __construct(array $data)
+    {
+        $this->id = $data['id'];
+        $this->prescriber_id = $data['prescriber_id'];
+        $this->patient_id = $data['patient_id'];
+        $this->consultation_id = $data['consultation_id'];
+        $this->record_id = $data['record_id'];
+        $this->doses_per_day = $data['doses_per_day'];
+        $this->days = $data['days'];
+    }
+
+    public function id()
+    {
+        return $this->id;
+    }
+
+    public function prescriberId()
+    {
+        return $this->prescriber_id;
+    }
+
+    public function patientId()
+    {
+        return $this->patient_id;
+    }
+
+    public function consultationId()
+    {
+        return $this->consultation_id;
+    }
+
+    public function recordId()
+    {
+        return $this->record_id;
+    }
+
+    public function prescription()
+    {
+        return [
+            'prescriber_id' => $this->prescriber_id,
+            'patient_id' => $this->patient_id,
+            'consultation_id' => $this->consultation_id,
+            'record_id' => $this->record_id,
+            'doses_per_day' => $this->doses_per_day,
+            'days' => $this->days
+        ];
+    }
+}

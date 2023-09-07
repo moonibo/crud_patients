@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Prescriber;
-use App\Services\PrescriberInterface;
+use App\Core\MyPatients\Domain\Prescriber\Contracts\PrescriberInterface;
 
 class PrescriberRepository extends BaseRepository implements PrescriberInterface
 {
