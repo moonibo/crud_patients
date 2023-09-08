@@ -57,7 +57,7 @@ class PrescriptionServiceTest extends TestCase
         $record = $this->mock(RecordInterface::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findPatientById')
+            $mock->shouldReceive('findByPatientId')
                 ->once()
                 ->with(5)
                 ->andReturn([
@@ -91,7 +91,7 @@ class PrescriptionServiceTest extends TestCase
         $record = $this->mock(RecordInterface::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findConsultationById')
+            $mock->shouldReceive('findByConsultationId')
                 ->once()
                 ->with(1)
                 ->andReturn([
@@ -125,7 +125,7 @@ class PrescriptionServiceTest extends TestCase
         $record = $this->mock(RecordInterface::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findRecordById')
+            $mock->shouldReceive('findByRecordId')
                 ->once()
                 ->with(3)
                 ->andReturn([

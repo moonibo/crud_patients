@@ -16,19 +16,8 @@ class CreatePrescription extends Controller
 
     public function __invoke(StorePrescriptionRequest $request): JsonResponse
     {
-        if ($request->validated()) {
-            $this->handler->handle(new CreatePrescriptionCommand([
-                'prescriber_id' => $request->prescriber_id,
-                'patient_id' => $request->patient_id,
-                'consultation_id' => $request->consultation_id,
-                'record_id' => $request->record_id,
-                'doses_per_day' => $request->doses_per_day,
-                'days' => $request->days
-            ]));
+        $this->handler->handle(new CreatePrescriptionCommand($request->validated()));
+        return response()->json(null, Response::HTTP_CREATED);
 
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-
-        return response()->json(null, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

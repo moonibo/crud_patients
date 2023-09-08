@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prescription extends Model
 {
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +18,7 @@ class Prescription extends Model
         'consultation_id',
         'record_id',
         'doses_per_day',
-        'days',
+        'days'
     ];
 
 }

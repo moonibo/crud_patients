@@ -44,7 +44,7 @@ class PatientServiceTest extends TestCase
         $prescriber = $this->mock(PrescriberInterface::class);
 
         $repository = $this->mock(PatientInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findPrescriberById')
+            $mock->shouldReceive('findByPrescriberId')
                 ->once()
                 ->with(1)
                 ->andReturn([

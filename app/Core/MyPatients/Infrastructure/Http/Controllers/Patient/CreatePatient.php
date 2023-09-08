@@ -19,18 +19,8 @@ class CreatePatient extends Controller
 
     public function __invoke(StorePatientRequest $request): int|JsonResponse
     {
-        if ($request->validated()) {
-            $this->handler->handle(new CreatePatientCommand([
-                'name' => $request->name,
-                'surname' => $request->surname,
-                'mail' => $request->mail,
-                'gender' => $request->gender,
-                'prescriber_id' => $request->prescriber_id,
-            ]));
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-
-        return response()->json(null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->handler->handle(new CreatePatientCommand($request->validated()));
+        return response()->json(null, Response::HTTP_CREATED);
 
     }
 }

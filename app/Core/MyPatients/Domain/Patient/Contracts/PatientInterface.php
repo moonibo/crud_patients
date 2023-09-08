@@ -13,7 +13,7 @@ interface PatientInterface
 
     public function find(int $id);
 
-    public function findPrescriberById(int $prescriber_id);
+    public function findByPrescriberId(int $prescriber_id);
 
     public function delete(int $id);
 

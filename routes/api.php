@@ -21,10 +21,12 @@ use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\FindPrescribe
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\FindPrescriberBySpecialityId;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber\UpdatePrescriber;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\CreatePrescription;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\DeletePrescription;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindAllPrescriptions;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByConsultationId;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionById;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByPatientId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByPrescriberId;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByRecordId;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\UpdatePrescription;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\CreateRecord;
@@ -91,18 +93,19 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
 
     Route::get('/prescriptions', FindAllPrescriptions::class )->name('prescriptions_index');
     Route::get('/prescriptions/{id}', FindPrescriptionById::class)->name('prescriptions_find');
+    Route::get('/prescriptions/prescriber/{prescriber_id}', FindPrescriptionByPrescriberId::class)->name('prescriptions_find_prescriber');
     Route::get('/prescriptions/patient/{patient_id}', FindPrescriptionByPatientId::class)->name('prescriptions_find_patient');
     Route::get('/prescriptions/consultation/{consultation_id}', FindPrescriptionByConsultationId::class)->name('prescriptions_find_consultation');
     Route::get('/prescriptions/record/{record_id}', FindPrescriptionByRecordId::class)->name('prescriptions_find_record');
     Route::post('/prescriptions/store',CreatePrescription::class)->name('prescriptions_store');
     Route::put('/prescriptions/{id}', UpdatePrescription::class)->name('prescriptions_update');
-    Route::post('/prescriptions/delete/{id}', 'PrescriptionController@delete')->name('prescriptions_delete');
+    Route::post('/prescriptions/delete/{id}', DeletePrescription::class)->name('prescriptions_delete');
 
     Route::get('/records', 'RecordController@index' )->name('prescriptions_index');
     Route::get('/records/{id}', 'RecordController@show')->name('prescriptions_find');
-    Route::get('/records/prescriber/{prescriber_id}', 'RecordController@findPrescriberById')->name('records_find_prescriber');
-    Route::get('/records/patient/{patient_id}', 'RecordController@findPatientById')->name('records_find_patient');
-    Route::get('/records/patient/{patient_id}', 'RecordController@findPatientById')->name('records_find_patient');
+    Route::get('/records/prescriber/{prescriber_id}', 'RecordController@findByPrescriberId')->name('records_find_prescriber');
+    Route::get('/records/patient/{patient_id}', 'RecordController@findByPatientId')->name('records_find_patient');
+    Route::get('/records/patient/{patient_id}', 'RecordController@findByPatientId')->name('records_find_patient');
     Route::get('/records/patient&prescriber/{patient_id}/{prescriber_id}', 'RecordController@showRecordByPatientIdAndPrescriberId')->name('records_find_recordbypatientandprescriberid');
     Route::post('/records/store',CreateRecord::class)->name('prescriptions_store');
     Route::put('/records/{id}', UpdateRecord::class)->name('prescriptions_update');

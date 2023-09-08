@@ -10,7 +10,7 @@ class FindPrescriberByConsultationIdCommandHandler
 
     public function handle(FindPrescriberByConsultationIdCommand $command)
     {
-        return $this->prescriber->findConsultationById($command->consultationId());
+        return $this->prescriber->findByConsultationId($command->consultationId());
     }
 }
 

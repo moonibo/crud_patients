@@ -14,18 +14,8 @@ class UpdateRecord extends Controller
 
     public function __invoke(StoreRecordRequest $request, int $id)
     {
-        if ($request->validated()) {
-            $this->handler->handle(new UpdateRecordCommand([
-                'id' => $request->id,
-                'prescriber_id' => $request->prescriber_id,
-                'patient_id' => $request->patient_id,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date
-            ]));
+        $this->handler->handle(new UpdateRecordCommand([...$request->validated(), 'id' => $request->id]));
+        return response()->json(null, Response::HTTP_CREATED);
 
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-
-        return response()->json(null, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

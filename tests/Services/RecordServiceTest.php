@@ -51,7 +51,7 @@ class RecordServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
 
         $repository = $this->mock(RecordInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findPrescriberById')
+            $mock->shouldReceive('findByPrescriberId')
                 ->once()
                 ->with(3)
                 ->andReturn([
@@ -80,7 +80,7 @@ class RecordServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
 
         $repository = $this->mock(RecordInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findPatientById')
+            $mock->shouldReceive('findByPatientId')
                 ->once()
                 ->with(4)
                 ->andReturn([

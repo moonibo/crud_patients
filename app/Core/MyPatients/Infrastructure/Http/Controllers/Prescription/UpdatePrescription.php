@@ -14,19 +14,7 @@ class UpdatePrescription extends Controller
 
     public function __invoke(StorePrescriptionRequest $request, int $id)
     {
-        if ($request->validated()) {
-            $this->handler->handle(New UpdatePrescriptionCommand([
-                'id' => $request->id,
-                'prescriber_id' => $request->prescriber_id,
-                'patient_id' => $request->patient_id,
-                'consultation_id' => $request->consultation_id,
-                'record_id' => $request->record_id,
-                'doses_per_day' => $request->doses_per_day,
-                'days' => $request->days
-            ]));
-
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-        return Response::HTTP_UNPROCESSABLE_ENTITY;
+        $this->handler->handle(New UpdatePrescriptionCommand([...$request->validated(), 'id' => $request->id]));
+        return response()->json(null, Response::HTTP_CREATED);
     }
 }

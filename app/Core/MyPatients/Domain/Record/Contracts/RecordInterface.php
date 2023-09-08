@@ -12,11 +12,11 @@ interface RecordInterface
 
     public function find (int $id);
 
-    public function findPrescriberById (int $prescriber_id);
+    public function findByPrescriberId (int $prescriber_id);
 
-    public function findPatientById (int $patient_id);
+    public function findByPatientId (int $patient_id);
 
-    public function findRecordByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id);
+    public function findRecordsByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id);
 
     public function findOpenRecordsByPatientAndPrescriberId (int $patient_id, int $prescriber_id);
 

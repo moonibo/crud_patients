@@ -40,47 +40,19 @@ class BaseRepository
         return $this->query()->find($id);
     }
 
-    public function findPrescriberById(int $prescriber_id): array|Collection
+    public function findByPrescriberId(int $prescriber_id): array|Collection
     {
         return $this->query()->where(['prescriber_id' => $prescriber_id])->get();
     }
 
-    public function findPatientById(int $patient_id) : array|Collection
+    public function findByPatientId(int $patient_id) : array|Collection
     {
         return $this->query()->where(['patient_id' => $patient_id])->get();
     }
 
-    public function findConsultationById(int $consultation_id) : array|Collection
+    public function findByConsultationId(int $consultation_id) : array|Collection
     {
         return $this->query()->where(['consultation_id' => $consultation_id])->get();
-    }
-
-    public function findSpecialityById (int $speciality_id) : array|Collection
-    {
-        return $this->query()->where(['speciality_id' => $speciality_id])->get();
-    }
-
-    public function findRecordById (int $record_id) : array|Collection
-    {
-        return $this->query()->where(['record_id' => $record_id])->get();
-    }
-
-    public function findRecordByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id) : array|Collection
-    {
-        return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])->get();
-    }
-
-    public function findOpenRecordsByPatientAndPrescriberId (int $patient_id, int $prescriber_id)
-    {
-        return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])->where('end_date', '>', Carbon::now());
-    }
-
-    public function findLatestOpenRecordByPatientAndPrescriberId(int $patient_id, int $prescriber_id)
-    {
-        return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])
-            ->where('end_date', '>', Carbon::now())
-            ->latest('created_at')
-            ->first();
     }
 
     public function delete(int $id): Model|bool

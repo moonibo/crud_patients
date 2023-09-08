@@ -10,6 +10,6 @@ class FindPrescriptionByPatientIdCommandHandler
 
     public function handle(FindPrescriptionByPatientIdCommand $command)
     {
-        return $this->prescription->findPatientById($command->patientId());
+        return $this->prescription->findByPatientId($command->patientId());
     }
 }

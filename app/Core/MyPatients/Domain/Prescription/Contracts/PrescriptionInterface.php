@@ -12,13 +12,16 @@ interface PrescriptionInterface
 
     public function find(int $id);
 
-    public function findPrescriberById(int $prescriber_id);
+    public function findByPrescriberId(int $prescriber_id);
 
-    public function findPatientById (int $patient_id);
+    public function findByPatientId (int $patient_id);
 
-    public function findConsultationById(int $consultation_id);
+    public function findByConsultationId(int $consultation_id);
 
-    public function findRecordById (int $record_id);
+    public function findByRecordId (int $record_id);
+
+    public function updatedOlderThanFifteenMinutes();
+    public function setEditableToFalse(array $ids);
 
     public function delete(int $id);
 }

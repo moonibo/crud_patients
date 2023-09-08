@@ -16,14 +16,7 @@ class CreateConsultation extends Controller
 
     public function __invoke(StoreConsultationRequest $request): JsonResponse
     {
-        if ($request->validated()) {
-            $this->handler->handle(new CreateConsultationCommand([
-                'name' => $request->name
-            ]));
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-
-        return response()->json(null, Response::HTTP_BAD_REQUEST);
-
+        $this->handler->handle(new CreateConsultationCommand($request->validated()));
+        return response()->json(null, Response::HTTP_CREATED);
     }
 }

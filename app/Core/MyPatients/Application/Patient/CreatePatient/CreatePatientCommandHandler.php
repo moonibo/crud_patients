@@ -15,7 +15,7 @@ class CreatePatientCommandHandler
 
     public function handle(CreatePatientCommand $command)
     {
-        if (isset($prescriber_id)) {
+        if ($command->prescriberId() !== null) {
             if ($this->prescriber->find($command->prescriberId()) !== null) {
                 return $this->patient->create([...$command->patient(),'gender' => $this->transformGender($command->gender()), 'prescriber_id' => $command->prescriberId()]);
             }

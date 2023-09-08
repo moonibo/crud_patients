@@ -29,7 +29,7 @@ class StorePatientRequest extends FormRequest
             'surname' => 'required|string',
             'mail' => "required|email|unique:patients,mail,$this->id,id",
             'gender' => "required|string",
-            'prescriber_id' => "int",
+            'prescriber_id' => "nullable|int",
         ];
     }
 

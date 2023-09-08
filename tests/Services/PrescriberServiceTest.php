@@ -43,7 +43,7 @@ class PrescriberServiceTest extends TestCase
         $speciality = $this->mock(SpecialityInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $repository = $this->mock(PrescriberInterface::class, function(MockInterface $mock){
-           $mock->shouldReceive('findConsultationById')
+           $mock->shouldReceive('findByConsultationId')
                ->once()
                ->with(1)
                ->andReturn([
@@ -68,7 +68,7 @@ class PrescriberServiceTest extends TestCase
         $speciality = $this->mock(SpecialityInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $repository = $this->mock(PrescriberInterface::class, function(MockInterface $mock){
-            $mock->shouldReceive('findSpecialityById')
+            $mock->shouldReceive('findBySpecialityId')
                 ->once()
                 ->with(1)
                 ->andReturn([

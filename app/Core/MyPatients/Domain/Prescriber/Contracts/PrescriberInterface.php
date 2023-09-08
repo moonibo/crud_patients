@@ -12,9 +12,9 @@ interface PrescriberInterface
 
     public function find(int $id);
 
-    public function findConsultationById(int $consultation_id);
+    public function findByConsultationId(int $consultation_id);
 
-    public function findSpecialityById (int $speciality_id);
+    public function findBySpecialityId (int $speciality_id);
 
     public function delete(int $id);
 }

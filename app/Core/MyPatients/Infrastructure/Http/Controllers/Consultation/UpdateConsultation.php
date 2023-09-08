@@ -17,15 +17,9 @@ class UpdateConsultation extends Controller
 
     public function __invoke(StoreConsultationRequest $request, int $id)
     {
-        if ($request->validated()) {
-            $this->handler->handle(new UpdateConsultationCommand([
-                'id' => $request->id,
-                'name' => $request->name
-            ]));
 
-            return response()->json(null, Response::HTTP_CREATED);
-        }
+        $this->handler->handle(new UpdateConsultationCommand([...$request->validated(), 'id' => $request->id]));
+        return response()->json(null, Response::HTTP_CREATED);
 
-        return response()->json(null, Response::HTTP_NOT_FOUND);
     }
 }

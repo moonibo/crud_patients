@@ -18,13 +18,11 @@ class UpdatePatientCommandHandler
             return false;
         }
 
-        $prescriber_id = $command->prescriberId();
-
-        if (isset($prescriber_id) && is_null($this->prescriber->find($prescriber_id))) {
+        if ($command->prescriberId() !== null && $this->prescriber->find($command->prescriberId()) === null) {
             return false;
         }
 
-        if(isset($prescriber_id)) {
+        if($command->prescriberId() !== null && $this->prescriber->find($command->prescriberId()) !== null) {
             $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender()), 'prescriber_id' => $prescriber_id], $command->id());
         }
 
