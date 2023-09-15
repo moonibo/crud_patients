@@ -18,6 +18,11 @@ class BaseRepository
         return app($this->model())->newQuery();
     }
 
+    public function exists(int $id): bool
+    {
+        return $this->query()->where('id', $id)->exists();
+    }
+
     public function all(?array $columns = ['*']): Collection|array
     {
         return $this->query()->get($columns);

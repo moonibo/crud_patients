@@ -3,27 +3,30 @@
 namespace App\Core\MyPatients\Application\Patient\UpdatePatient;
 
 use App\Core\MyPatients\Domain\Patient\Contracts\PatientInterface;
+use App\Core\MyPatients\Domain\Patient\Exceptions\PatientNotFoundException;
+use App\Core\MyPatients\Domain\Patient\Services\PatientFinder;
 use App\Core\MyPatients\Domain\Prescriber\Contracts\PrescriberInterface;
+use App\Core\MyPatients\Domain\Prescriber\Exceptions\PrescriberNotFoundException;
+use App\Core\MyPatients\Domain\Prescriber\Services\PrescriberFinder;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdatePatientCommandHandler
 {
     public function __construct(private readonly PatientInterface $patient,
-                               private readonly PrescriberInterface $prescriber)
+                               private readonly PatientFinder $patientFinder,
+                               private readonly PrescriberFinder $prescriberFinder)
     {}
 
-    public function handle (UpdatePatientCommand $command)
+    /**
+     * @throws PatientNotFoundException|PrescriberNotFoundException
+     */
+    public function handle (UpdatePatientCommand $command): void
     {
-        if (is_null($this->patient->find($command->id()))) {
-            return false;
-        }
+        $this->patientFinder->byIdOrFail($command->id());
+        $this->prescriberFinder->byIdOrFail($command->prescriberId());
 
-        if ($command->prescriberId() !== null && $this->prescriber->find($command->prescriberId()) === null) {
-            return false;
-        }
-
-        if($command->prescriberId() !== null && $this->prescriber->find($command->prescriberId()) !== null) {
-            $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender()), 'prescriber_id' => $prescriber_id], $command->id());
+        if($command->prescriberId() !== null && $this->prescriberFinder->byId($command->prescriberId()) !== null) {
+            $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender()), 'prescriber_id' => $command->prescriberId()], $command->id());
         }
 
         $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender())], $command->id());

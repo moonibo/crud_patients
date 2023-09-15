@@ -20,8 +20,7 @@ interface PrescriptionInterface
 
     public function findByRecordId (int $record_id);
 
-    public function updatedOlderThanFifteenMinutes();
-    public function setEditableToFalse(array $ids);
+    public function setEditableToFalseUpdatedOlderThanFifteenMinutes();
 
     public function delete(int $id);
 }

@@ -4,6 +4,7 @@ namespace App\Core\MyPatients\Application\Patient\CreatePatient;
 
 use App\Core\MyPatients\Domain\Patient\Contracts\PatientInterface;
 use App\Core\MyPatients\Domain\Prescriber\Contracts\PrescriberInterface;
+use App\Core\MyPatients\Domain\Prescriber\Services\PrescriberFinder;
 use Symfony\Component\HttpFoundation\Response;
 
 

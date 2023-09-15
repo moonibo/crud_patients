@@ -19,14 +19,10 @@ class PrescriptionRepository extends BaseRepository implements PrescriptionInter
         return $this->query()->where(['record_id' => $record_id])->get();
     }
 
-    public function updatedOlderThanFifteenMinutes(): Collection|array
+    public function setEditableToFalseUpdatedOlderThanFifteenMinutes(): int
     {
-        return $this->query()->where('updated_at', '<', Carbon::now()->subMinutes(15))->get();
+        return $this->query()->where('updated_at', '<', Carbon::now()->subMinutes(15))->update(['is_editable' => false]);
     }
 
-    public function setEditableToFalse(array $ids): void
-    {
-        $this->query()->whereIn('id', $ids)->update(['is_editable' => false]);
-    }
 
 }

@@ -11,14 +11,6 @@ class MakeOldPrescriptionsNotEditableCommandHandler
 
     public function handle(): void
     {
-        $prescriptions = $this->prescription->updatedOlderThanFifteenMinutes();
-        $ids = [];
-        if ($prescriptions) {
-            foreach($prescriptions as $prescription) {
-                $ids[] = $prescription->id;
-            }
-            $this->prescription->setEditableToFalse($ids);
-        }
-
+       $this->prescription->setEditableToFalseUpdatedOlderThanFifteenMinutes();
     }
 }

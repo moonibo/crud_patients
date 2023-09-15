@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -60,15 +64,16 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'registered_prescribers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\RegisteredPrescriber::class,
+            'table' => 'registered_prescribers',
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'users' => [
+             'driver' => 'database',
+             'table' => 'users',
+         ],
     ],
 
     /*

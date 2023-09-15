@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Core\MyPatients\Domain\RegisteredPrescriber\Contracts\RegisteredPrescriberInterface;
 use App\Repositories\ConsultationRepository;
 use App\Repositories\PatientRepository;
 use App\Repositories\PrescriberRepository;
 use App\Repositories\PrescriptionRepository;
 use App\Repositories\RecordRepository;
+use App\Repositories\RegisteredPrescriberRepository;
 use App\Repositories\SpecialityRepository;
 use App\Services\ConsultationInterface;
 use App\Services\PatientInterface;
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Core\MyPatients\Domain\Consultation\Contracts\ConsultationInterface::class, ConsultationRepository::class);
         $this->app->bind(\App\Core\MyPatients\Domain\Prescription\Contracts\PrescriptionInterface::class, PrescriptionRepository::class);
         $this->app->bind(\App\Core\MyPatients\Domain\Record\Contracts\RecordInterface::class, RecordRepository::class);
+        $this->app->bind(RegisteredPrescriberInterface::class, RegisteredPrescriberRepository::class);
     }
 
     /**

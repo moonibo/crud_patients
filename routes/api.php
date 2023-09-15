@@ -8,6 +8,8 @@ use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\DeleteConsu
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\FindAllConsultations;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\FindConsultationById;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation\UpdateConsultation;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\CreatePatient;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\CreatePatientByPrescriber;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\DeletePatient;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\FindAllPatients;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\FindPatientById;
@@ -31,6 +33,7 @@ use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescri
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\UpdatePrescription;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\CreateRecord;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\UpdateRecord;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\RegisteredPrescriber\AuthPrescriber;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\CreateSpeciality;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\DeleteSpeciality;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\FindAllSpecialities;
@@ -38,8 +41,9 @@ use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\FindSpecialit
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\UpdateSpeciality;
 use App\Http\Middleware\AcceptJson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\CreatePatient;
+use InvalidArgumentException;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,15 +56,30 @@ use App\Core\MyPatients\Infrastructure\Http\Controllers\Patient\CreatePatient;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function(Request $request) {
     return $request->user();
 });
+
+
+Route::group(['prefix' => 'prescriber'], function(){
+    Route::post('register', [AuthPrescriber::class, 'register']);
+    Route::post('login', [AuthPrescriber::class, 'login']);
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('logout', [AuthPrescriber::class, 'logout']);
+        Route::get('user', [AuthPrescriber::class, 'user']);
+
+    });
+});
+
+
 
 Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Patient', 'middleware' => AcceptJson::class], function () {
     Route::get('/patients', FindAllPatients::class)->name('patients_index');
     Route::get('/patients/{id}', FindPatientById::class)->name('patients_find');
     Route::get('/patients/prescribers/{prescriber_id}', FindPatientByPrescriberId::class)->name('patients_find_prescriber');
     Route::post('/patients/store', CreatePatient::class)->name('patients_store');
+    Route::post('/patients/prescribers/store', CreatePatientByPrescriber::class)->middleware('auth:api')->name('patients_store');
     Route::put('/patients/{id}', UpdatePatient::class)->name('patients_update');
     Route::post('/patients/delete/{id}', DeletePatient::class)->name('patients_delete');
 });
@@ -91,6 +110,7 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/prescribers/delete/{id}', DeletePrescriber::class)->name('prescribers_delete');
 });
 
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription', 'middleware' => AcceptJson::class], function () {
     Route::get('/prescriptions', FindAllPrescriptions::class )->name('prescriptions_index');
     Route::get('/prescriptions/{id}', FindPrescriptionById::class)->name('prescriptions_find');
     Route::get('/prescriptions/prescriber/{prescriber_id}', FindPrescriptionByPrescriberId::class)->name('prescriptions_find_prescriber');
@@ -100,7 +120,9 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/prescriptions/store',CreatePrescription::class)->name('prescriptions_store');
     Route::put('/prescriptions/{id}', UpdatePrescription::class)->name('prescriptions_update');
     Route::post('/prescriptions/delete/{id}', DeletePrescription::class)->name('prescriptions_delete');
+});
 
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Record', 'middleware' => AcceptJson::class], function () {
     Route::get('/records', 'RecordController@index' )->name('prescriptions_index');
     Route::get('/records/{id}', 'RecordController@show')->name('prescriptions_find');
     Route::get('/records/prescriber/{prescriber_id}', 'RecordController@findByPrescriberId')->name('records_find_prescriber');
@@ -110,5 +132,6 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/records/store',CreateRecord::class)->name('prescriptions_store');
     Route::put('/records/{id}', UpdateRecord::class)->name('prescriptions_update');
     Route::post('/records/delete/{id}', 'RecordController@delete')->name('prescriptions_delete');
+});
 
 
