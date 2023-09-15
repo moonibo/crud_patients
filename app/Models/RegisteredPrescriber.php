@@ -13,6 +13,8 @@ class RegisteredPrescriber extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public $table = 'registered_prescribers';
+
     /**
      * The attributes that are mass assignable.
      *

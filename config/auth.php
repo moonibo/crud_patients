@@ -42,7 +42,7 @@ return [
         ],
         'api' => [
             'driver' => 'passport',
-            'provider' => 'users',
+            'provider' => 'registered_prescribers',
         ],
     ],
 
@@ -66,13 +66,12 @@ return [
     'providers' => [
         'registered_prescribers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\RegisteredPrescriber::class,
-            'table' => 'registered_prescribers',
+            'model' => App\Models\RegisteredPrescriber::class
         ],
 
          'users' => [
-             'driver' => 'database',
-             'table' => 'users',
+             'driver' => 'eloquent',
+             'model' => App\Models\User::class,
          ],
     ],
 
