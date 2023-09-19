@@ -16,6 +16,6 @@ class RegisteredPrescriberRepository extends BaseRepository implements Registere
 
     public function findByMail(string $mail): Model|Builder|null
     {
-        return $this->query()->where(['mail' => $mail])->first();
+        return $this->query()->where(['email' => $mail])->first();
     }
 }

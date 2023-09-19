@@ -11,7 +11,7 @@ class RecordFinder
     {
     }
 
-    public function exists(int $id)
+    public function exists(int $id): void
     {
         $exists = $this->record->exists($id);
         if (!$exists) {
@@ -28,6 +28,44 @@ class RecordFinder
     {
         $record = $this->byId($id);
         if ($record == null) {
+            throw new RecordNotFoundException();
+        }
+    }
+    public function byPrescriberId(int $prescriberId)
+    {
+        return $this->record->findByPrescriberId($prescriberId);
+    }
+
+    public function byPrescriberIdOrFail(int $prescriberId): void
+    {
+        $records = $this->byPrescriberId($prescriberId);
+        if ($records == null) {
+            throw new RecordNotFoundException();
+        }
+    }
+
+    public function byPatientId(int $patientId)
+    {
+        return $this->record->findByPatientId($patientId);
+    }
+
+    public function byPatientIdOrFail(int $patientId): void
+    {
+        $records = $this->byPrescriberId($patientId);
+        if ($records == null) {
+            throw new RecordNotFoundException();
+        }
+    }
+
+    public function byPatientAndPrescriberId(int $patientId, int $prescriberId)
+    {
+        return $this->record->findRecordsByPatientIdAndPrescriberId($patientId, $prescriberId);
+    }
+
+    public function byPatientAndPrescriberIdOrFail(int $patientId, int $prescriberId)
+    {
+        $records = $this->byPatientAndPrescriberId($patientId, $prescriberId);
+        if ($records->isEmpty()) {
             throw new RecordNotFoundException();
         }
     }

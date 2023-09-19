@@ -32,6 +32,12 @@ use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescri
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\FindPrescriptionByRecordId;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription\UpdatePrescription;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\CreateRecord;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\DeleteRecord;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\FindAllRecords;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\FindRecordById;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\FindRecordByPatientAndPrescriberId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\FindRecordByPatientId;
+use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\FindRecordByPrescriberId;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Record\UpdateRecord;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\RegisteredPrescriber\AuthPrescriber;
 use App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality\CreateSpeciality;
@@ -61,30 +67,27 @@ Route::middleware('auth:api')->get('/user', function(Request $request) {
 });
 
 
-Route::group(['prefix' => 'prescriber'], function(){
-    Route::post('register', [AuthPrescriber::class, 'register']);
-    Route::post('login', [AuthPrescriber::class, 'login']);
+Route::group(['prefix' => 'prescriber', 'namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\RegisteredPrescriber'], function(){
+    Route::post('/register', [AuthPrescriber::class, 'register']);
 
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('logout', [AuthPrescriber::class, 'logout']);
-        Route::get('user', [AuthPrescriber::class, 'user']);
-
+        Route::post('/logout', [AuthPrescriber::class, 'logout']);
     });
 });
 
 
 
-Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Patient', 'middleware' => AcceptJson::class], function () {
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Patient', 'middleware' => 'auth:api'], function (){
     Route::get('/patients', FindAllPatients::class)->name('patients_index');
     Route::get('/patients/{id}', FindPatientById::class)->name('patients_find');
     Route::get('/patients/prescribers/{prescriber_id}', FindPatientByPrescriberId::class)->name('patients_find_prescriber');
     Route::post('/patients/store', CreatePatient::class)->name('patients_store');
-    Route::post('/patients/prescribers/store', CreatePatientByPrescriber::class)->middleware('auth:api')->name('patients_store');
+    Route::post('/patients/prescribers/store', CreatePatientByPrescriber::class)->name('patients_store');
     Route::put('/patients/{id}', UpdatePatient::class)->name('patients_update');
     Route::post('/patients/delete/{id}', DeletePatient::class)->name('patients_delete');
 });
 
-Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality', 'middleware' => AcceptJson::class], function () {
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Speciality', 'middleware' => 'auth:api'], function () {
     Route::get('/specialities', FindAllSpecialities::class)->name('specialities_index');
     Route::get('/specialities/{id}', FindSpecialityById::class)->name('specialities_find');
     Route::post('/specialities/store', CreateSpeciality::class)->name('specialities_store');
@@ -92,7 +95,7 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/specialities/delete/{id}', DeleteSpeciality::class)->name('specialities_delete');
 });
 
-Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation', 'middleware' => AcceptJson::class], function () {
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation', 'middleware' => 'auth:api'], function () {
     Route::get('/consultations', FindAllConsultations::class)->name('consultations_index');
     Route::get('/consultations/{id}', FindConsultationById::class)->name('consultations_find');
     Route::post('/consultations/store', CreateConsultation::class)->name('consultations_store');
@@ -100,7 +103,7 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/consultations/delete/{id}', DeleteConsultation::class)->name('consultations_delete');
 });
 
-Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber', 'middleware' => AcceptJson::class], function () {
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber', 'middleware' => 'auth:api'], function () {
     Route::get('/prescribers', FindAllPrescribers::class)->name('prescribers_index');
     Route::get('/prescribers/{id}', FindPrescriberById::class)->name('prescribers_find');
     Route::get('/prescribers/consultation/{consultation_id}', FindPrescriberByConsultationId::class)->name('prescribers_find_consultation');
@@ -110,7 +113,7 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/prescribers/delete/{id}', DeletePrescriber::class)->name('prescribers_delete');
 });
 
-Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription', 'middleware' => AcceptJson::class], function () {
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Prescription', 'middleware' => 'auth:api'], function () {
     Route::get('/prescriptions', FindAllPrescriptions::class )->name('prescriptions_index');
     Route::get('/prescriptions/{id}', FindPrescriptionById::class)->name('prescriptions_find');
     Route::get('/prescriptions/prescriber/{prescriber_id}', FindPrescriptionByPrescriberId::class)->name('prescriptions_find_prescriber');
@@ -122,16 +125,15 @@ Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controller
     Route::post('/prescriptions/delete/{id}', DeletePrescription::class)->name('prescriptions_delete');
 });
 
-Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Record', 'middleware' => AcceptJson::class], function () {
-    Route::get('/records', 'RecordController@index' )->name('prescriptions_index');
-    Route::get('/records/{id}', 'RecordController@show')->name('prescriptions_find');
-    Route::get('/records/prescriber/{prescriber_id}', 'RecordController@findByPrescriberId')->name('records_find_prescriber');
-    Route::get('/records/patient/{patient_id}', 'RecordController@findByPatientId')->name('records_find_patient');
-    Route::get('/records/patient/{patient_id}', 'RecordController@findByPatientId')->name('records_find_patient');
-    Route::get('/records/patient&prescriber/{patient_id}/{prescriber_id}', 'RecordController@showRecordByPatientIdAndPrescriberId')->name('records_find_recordbypatientandprescriberid');
+Route::group(['namespace' => 'App\Core\MyPatients\Infrastructure\Http\Controllers\Record', 'middleware' => 'auth:api'], function () {
+    Route::get('/records', FindAllRecords::class )->name('prescriptions_index');
+    Route::get('/records/{id}', FindRecordById::class)->name('prescriptions_find');
+    Route::get('/records/prescriber/{prescriber_id}', FindRecordByPrescriberId::class)->name('records_find_prescriber');
+    Route::get('/records/patient/{patient_id}', FindRecordByPatientId::class)->name('records_find_patient');
+    Route::get('/records/patient&prescriber/{patient_id}/{prescriber_id}', FindRecordByPatientAndPrescriberId::class)->name('records_find_recordbypatientandprescriberid');
     Route::post('/records/store',CreateRecord::class)->name('prescriptions_store');
     Route::put('/records/{id}', UpdateRecord::class)->name('prescriptions_update');
-    Route::post('/records/delete/{id}', 'RecordController@delete')->name('prescriptions_delete');
+    Route::post('/records/delete/{id}', DeleteRecord::class)->name('prescriptions_delete');
 });
 
 

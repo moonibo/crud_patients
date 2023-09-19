@@ -10,6 +10,7 @@ use App\Http\Requests\RegisterPrescriberRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthPrescriber extends Controller
@@ -23,29 +24,10 @@ class AuthPrescriber extends Controller
 
         if($prescriber) {
             //$password = Hash::make($request->password);
-            $token = $this->handler->handle(new RegisteredPrescriberCommand($request->validated()))->createToken('Register token')->accessToken;
-            return response()->json(['Token' => $token], Response::HTTP_OK);
+            $this->handler->handle(new RegisteredPrescriberCommand($request->validated())); //->createToken('Register token')->accessToken;
+            return response()->json(null, Response::HTTP_OK);
         }
         return response()->json(null, Response::HTTP_NO_CONTENT);
-    }
-
-    public function login (LoginPrescriberRequest $request): JsonResponse
-    {
-        $prescriber = $this->handler->findRegisteredPrescriberByMail($request->validated()['mail']);
-        if ($prescriber) {
-            if(auth()->validate(["mail" => $request->mail, "password" => $request->password])) {
-                auth()->login($prescriber);
-                $token = $prescriber->createToken('Login token')->accessToken;
-                return response()->json(['Token' => $token], Response::HTTP_OK);
-            }
-            return response()->json(null, 422);
-        }
-        return response()->json(null, 422);
-    }
-
-    public function user(): JsonResponse
-    {
-        return response()->json(auth()->user());
     }
 
     public function logout (): JsonResponse
