@@ -17,9 +17,6 @@ class FindRecordByPatientId extends Controller
     public function __invoke(int $patientId): JsonResponse
     {
         $records = $this->handler->handle(new FindRecordByPatientIdCommand($patientId));
-        if ($records->isEmpty()) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
         return response()->json($records, Response::HTTP_OK);
     }
 }

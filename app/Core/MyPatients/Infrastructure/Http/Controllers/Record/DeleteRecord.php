@@ -5,6 +5,7 @@ namespace App\Core\MyPatients\Infrastructure\Http\Controllers\Record;
 use App\Core\MyPatients\Application\Record\DeleteRecord\DeleteRecordCommand;
 use App\Core\MyPatients\Application\Record\DeleteRecord\DeleteRecordCommandHandler;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteRecord extends Controller
@@ -13,14 +14,9 @@ class DeleteRecord extends Controller
     {
     }
 
-    public function __invoke(int $id): int
+    public function __invoke(int $id): JsonResponse
     {
-        $deleted = $this->handler->handle(New DeleteRecordCommand($id));
-
-        if (!$deleted) {
-            return Response::HTTP_NO_CONTENT;
-        }
-
-        return Response::HTTP_OK;
+        $this->handler->handle(New DeleteRecordCommand($id));
+        return response()->json(null, Response::HTTP_OK);
     }
 }

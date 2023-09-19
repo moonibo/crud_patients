@@ -9,7 +9,6 @@ use App\Core\MyPatients\Domain\RegisteredPrescriber\Services\RegisteredPrescribe
 class RegisteredPrescriberCommandHandler
 {
     public function __construct(private readonly PrescriberFinder $prescriberFinder,
-                                private readonly RegisteredPrescriberFinder $registeredPrescriberFinder,
                                 private readonly RegisteredPrescriberInterface $registeredPrescriber)
     {}
 
@@ -21,10 +20,5 @@ class RegisteredPrescriberCommandHandler
     public function findPrescriberById(int $id)
     {
         return $this->prescriberFinder->byId($id);
-    }
-
-    public function findRegisteredPrescriberByMail(string $mail)
-    {
-        return $this->registeredPrescriberFinder->byMail($mail);
     }
 }

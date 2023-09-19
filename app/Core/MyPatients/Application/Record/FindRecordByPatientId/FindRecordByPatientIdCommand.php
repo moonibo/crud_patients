@@ -11,7 +11,7 @@ class FindRecordByPatientIdCommand
         $this->patientId = $patientId;
     }
 
-    public function patientId()
+    public function patientId(): int
     {
         return $this->patientId;
     }

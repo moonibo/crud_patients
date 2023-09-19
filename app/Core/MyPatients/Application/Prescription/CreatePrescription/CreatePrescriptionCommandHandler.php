@@ -2,11 +2,15 @@
 
 namespace App\Core\MyPatients\Application\Prescription\CreatePrescription;
 
+use App\Core\MyPatients\Domain\Consultation\Exceptions\ConsultationNotFoundException;
 use App\Core\MyPatients\Domain\Consultation\Services\ConsultationFinder;
+use App\Core\MyPatients\Domain\Patient\Exceptions\PatientNotFoundException;
 use App\Core\MyPatients\Domain\Patient\Services\PatientFinder;
+use App\Core\MyPatients\Domain\Prescriber\Exceptions\PrescriberNotFoundException;
 use App\Core\MyPatients\Domain\Prescriber\Services\PrescriberFinder;
 use App\Core\MyPatients\Domain\Prescription\Contracts\PrescriptionInterface;
 use App\Core\MyPatients\Domain\Record\Contracts\RecordInterface;
+use App\Core\MyPatients\Domain\Record\Services\RecordFinder;
 use Carbon\Carbon;
 
 class CreatePrescriptionCommandHandler
@@ -15,15 +19,21 @@ class CreatePrescriptionCommandHandler
                                 private readonly RecordInterface $record,
                                 private readonly PrescriberFinder $prescriberFinder,
                                 private readonly PatientFinder $patientFinder,
-                                private readonly ConsultationFinder $consultationFinder){}
+                                private readonly ConsultationFinder $consultationFinder,
+                                private readonly RecordFinder $recordFinder){}
 
-    public function handle(CreatePrescriptionCommand $command)
+    /**
+     * @throws ConsultationNotFoundException
+     * @throws PrescriberNotFoundException
+     * @throws PatientNotFoundException
+     */
+    public function handle(CreatePrescriptionCommand $command): void
     {
         $this->prescriberFinder->byIdOrFail($command->prescriberId());
         $this->patientFinder->byIdOrFail($command->patientId());
         $this->consultationFinder->byIdOrFail($command->consultationId());
 
-        if (is_null($this->record->find($command->recordId()))) {
+        if (!$this->recordFinder->byId($command->recordId())) {
             $record = $this->record->findLatestOpenRecordByPatientAndPrescriberId($command->patientId(), $command->prescriberId());
             if ($record) {
                 $this->prescription->create([...$command->prescription(), 'record_id' => $record->id]);

@@ -19,17 +19,17 @@ class UpdateRecordCommand
         $this->end_date = $data['end_date'];
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }
 
-    public function prescriberId()
+    public function prescriberId(): int
     {
         return $this->prescriber_id;
     }
 
-    public function patientId()
+    public function patientId(): int
     {
         return $this->patient_id;
     }

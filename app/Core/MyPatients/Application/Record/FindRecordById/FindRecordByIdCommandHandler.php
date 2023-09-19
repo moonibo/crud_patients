@@ -2,15 +2,19 @@
 
 namespace App\Core\MyPatients\Application\Record\FindRecordById;
 
-use App\Core\MyPatients\Domain\Record\Contracts\RecordInterface;
+use App\Core\MyPatients\Domain\Record\Exceptions\RecordNotFoundException;
 use App\Core\MyPatients\Domain\Record\Services\RecordFinder;
 
 class FindRecordByIdCommandHandler
 {
-    public function __construct(private readonly RecordInterface $record){}
+    public function __construct(private readonly RecordFinder $recordFinder){}
 
+    /**
+     * @throws RecordNotFoundException
+     */
     public function handle(FindRecordByIdCommand $command)
     {
-        return $this->record->find($command->id());
+        $this->recordFinder->byIdOrFail($command->id());
+        return $this->recordFinder->byId($command->id());
     }
 }

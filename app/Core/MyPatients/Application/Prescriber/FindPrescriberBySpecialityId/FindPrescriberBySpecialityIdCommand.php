@@ -12,7 +12,7 @@ class FindPrescriberBySpecialityIdCommand
         $this->specialityId = $id;
     }
 
-    public function specialityId()
+    public function specialityId(): int
     {
         return $this->specialityId;
     }

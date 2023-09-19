@@ -4,6 +4,7 @@
 namespace App\Core\MyPatients\Application\Consultation\UpdateConsultation;
 
 use App\Core\MyPatients\Domain\Consultation\Contracts\ConsultationInterface;
+use App\Core\MyPatients\Domain\Consultation\Exceptions\ConsultationNotFoundException;
 use App\Core\MyPatients\Domain\Consultation\Services\ConsultationFinder;
 
 class UpdateConsultationCommandHandler
@@ -12,7 +13,10 @@ class UpdateConsultationCommandHandler
                                 private readonly ConsultationFinder $consultationFinder)
     {}
 
-    public function handle(UpdateConsultationCommand $command)
+    /**
+     * @throws ConsultationNotFoundException
+     */
+    public function handle(UpdateConsultationCommand $command): void
     {
         $this->consultationFinder->byIdOrFail($command->id());
         $this->consultation->update($command->consultation(), $command->id());

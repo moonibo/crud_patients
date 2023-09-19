@@ -23,32 +23,32 @@ class UpdatePrescriptionCommand
         $this->days = $data['days'];
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }
 
-    public function prescriberId()
+    public function prescriberId(): int
     {
         return $this->prescriber_id;
     }
 
-    public function patientId()
+    public function patientId(): int
     {
         return $this->patient_id;
     }
 
-    public function consultationId()
+    public function consultationId(): int
     {
         return $this->consultation_id;
     }
 
-    public function recordId()
+    public function recordId(): int
     {
         return $this->record_id;
     }
 
-    public function prescription()
+    public function prescription(): array
     {
         return [
             'prescriber_id' => $this->prescriber_id,

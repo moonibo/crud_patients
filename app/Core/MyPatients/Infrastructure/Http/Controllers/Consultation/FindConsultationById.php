@@ -17,12 +17,7 @@ class FindConsultationById extends Controller
 
     public function __invoke(int $id): JsonResponse
     {
-
         $consultation = $this->handler->handle(new FindConsultationByIdCommand($id));
-        if($consultation !== null) {
-            return response()->json($consultation, Response::HTTP_FOUND);
-        }
-        return response()->json(null, Response::HTTP_NOT_FOUND);
-
+        return response()->json($consultation, Response::HTTP_FOUND);
     }
 }

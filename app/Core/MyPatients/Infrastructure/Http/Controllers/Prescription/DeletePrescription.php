@@ -15,12 +15,7 @@ class DeletePrescription extends Controller
 
     public function __invoke(int $id): int
     {
-        $deleted = $this->handler->handle(New DeletePrescriptionCommand($id));
-
-        if (!$deleted) {
-            return Response::HTTP_NO_CONTENT;
-        }
-
+        $this->handler->handle(New DeletePrescriptionCommand($id));
         return Response::HTTP_OK;
     }
 }

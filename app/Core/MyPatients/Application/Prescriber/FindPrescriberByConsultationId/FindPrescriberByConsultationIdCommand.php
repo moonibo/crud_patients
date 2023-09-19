@@ -11,7 +11,7 @@ class FindPrescriberByConsultationIdCommand
         $this->consultation_id = $id;
     }
 
-    public function consultationId()
+    public function consultationId(): int
     {
         return $this->consultation_id;
     }

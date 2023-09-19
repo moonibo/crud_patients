@@ -4,6 +4,7 @@ namespace App\Core\MyPatients\Infrastructure\Http\Controllers\Prescriber;
 
 use App\Core\MyPatients\Application\Prescriber\FindPrescriberByConsultationId\FindPrescriberByConsultationIdCommand;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class FindPrescriberByConsultationId extends Controller
@@ -12,14 +13,9 @@ class FindPrescriberByConsultationId extends Controller
     {
     }
 
-    public function __invoke(int $id)
+    public function __invoke(int $id): JsonResponse
     {
         $prescribers = $this->handler->handle(New FindPrescriberByConsultationIdCommand($id));
-
-        if (empty($prescribers->toArray())) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
-
         return response()->json($prescribers,Response::HTTP_OK);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Core\MyPatients\Domain\RegisteredPrescriber\Services;
 
 use App\Core\MyPatients\Domain\RegisteredPrescriber\Contracts\RegisteredPrescriberInterface;
-use App\Core\MyPatients\Domain\RegisteredPrescriber\Exceptions\PrescriberNotFoundException;
+use App\Core\MyPatients\Domain\RegisteredPrescriber\Exceptions\RegisteredPrescriberNotFoundException;
 
 class RegisteredPrescriberFinder
 {
@@ -15,7 +15,7 @@ class RegisteredPrescriberFinder
     {
         $exists = $this->registeredPrescriber->exists($id);
         if (!$exists) {
-            throw new PrescriberNotFoundException();
+            throw new RegisteredPrescriberNotFoundException();
         }
     }
 
@@ -33,7 +33,7 @@ class RegisteredPrescriberFinder
     {
         $prescriber = $this->byId($id);
         if ($prescriber == null) {
-            throw new PrescriberNotFoundException();
+            throw new RegisteredPrescriberNotFoundException();
         }
     }
 }

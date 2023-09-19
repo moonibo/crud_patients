@@ -17,15 +17,17 @@ class UpdatePatientCommandHandler
                                private readonly PrescriberFinder $prescriberFinder)
     {}
 
+
     /**
-     * @throws PatientNotFoundException|PrescriberNotFoundException
+     * @throws PrescriberNotFoundException
+     * @throws PatientNotFoundException
      */
     public function handle (UpdatePatientCommand $command): void
     {
         $this->patientFinder->byIdOrFail($command->id());
-        $this->prescriberFinder->byIdOrFail($command->prescriberId());
 
-        if($command->prescriberId() !== null && $this->prescriberFinder->byId($command->prescriberId()) !== null) {
+        if($command->prescriberId() !== null) {
+            $this->prescriberFinder->byIdOrFail($command->prescriberId());
             $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender()), 'prescriber_id' => $command->prescriberId()], $command->id());
         }
 

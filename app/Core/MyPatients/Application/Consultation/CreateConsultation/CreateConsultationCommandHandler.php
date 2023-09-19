@@ -9,7 +9,7 @@ class CreateConsultationCommandHandler
     public function __construct(private readonly ConsultationInterface $speciality)
     {}
 
-    public function handle(CreateConsultationCommand $command)
+    public function handle(CreateConsultationCommand $command): void
     {
         $this->speciality->create($command->consultation());
     }

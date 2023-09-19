@@ -11,7 +11,7 @@ class DeletePrescriberCommand
         $this->id = $id;
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }

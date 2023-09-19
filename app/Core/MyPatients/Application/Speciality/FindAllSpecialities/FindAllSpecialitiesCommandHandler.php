@@ -2,16 +2,15 @@
 
 namespace App\Core\MyPatients\Application\Speciality\FindAllSpecialities;
 
-use App\Core\MyPatients\Domain\Speciality\Contracts\SpecialityInterface;
+use App\Core\MyPatients\Domain\Speciality\Services\SpecialityFinder;
 
 class FindAllSpecialitiesCommandHandler
 {
-    public function __construct(private readonly SpecialityInterface $speciality)
+    public function __construct(private readonly SpecialityFinder $specialityFinder)
     {
     }
-
     public function handle()
     {
-        return $this->speciality->all();
+        return $this->specialityFinder->findAll();
     }
 }

@@ -19,6 +19,11 @@ class SpecialityFinder
         }
     }
 
+    public function findAll()
+    {
+        return $this->speciality->all();
+    }
+
     public function byId(int $id)
     {
         return $this->speciality->find($id);

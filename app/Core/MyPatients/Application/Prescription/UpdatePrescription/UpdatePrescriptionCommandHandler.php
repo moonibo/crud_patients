@@ -32,13 +32,12 @@ class UpdatePrescriptionCommandHandler
      */
     public function handle(UpdatePrescriptionCommand $command): void
     {
+        $this->prescriptionFinder->byIdOrFail($command->id());
+        $this->prescriberFinder->byIdOrFail($command->prescriberId());
+        $this->patientFinder->byIdOrFail($command->patientId());
+        $this->consultationFinder->byIdOrFail($command->consultationId());
+        $this->recordFinder->byIdOrFail($command->recordId());
 
-            $this->prescriptionFinder->byIdOrFail($command->id());
-            $this->prescriberFinder->byIdOrFail($command->prescriberId());
-            $this->patientFinder->byIdOrFail($command->patientId());
-            $this->consultationFinder->byIdOrFail($command->consultationId());
-            $this->recordFinder->byIdOrFail($command->recordId());
-
-            $this->prescription->update($command->prescription(), $command->id());
+        $this->prescription->update($command->prescription(), $command->id());
     }
 }

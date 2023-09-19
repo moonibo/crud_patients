@@ -14,12 +14,12 @@ class UpdateSpecialityCommand
         $this->name = $data['name'];
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }
 
-    public function speciality()
+    public function speciality(): array
     {
         return [
             'name' => $this->name

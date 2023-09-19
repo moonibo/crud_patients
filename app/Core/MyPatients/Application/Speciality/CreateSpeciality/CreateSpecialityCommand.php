@@ -11,7 +11,7 @@ class CreateSpecialityCommand
         $this->name = $data['name'];
     }
 
-    public function speciality()
+    public function speciality(): array
     {
         return [
             'name' => $this->name,

@@ -15,11 +15,7 @@ class DeleteSpeciality extends Controller
 
     public function __invoke(int $id): JsonResponse
     {
-        $deleted = $this->handler->handle(new DeleteSpecialityCommand($id));
-
-        if (!$deleted) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
+        $this->handler->handle(new DeleteSpecialityCommand($id));
         return response()->json(Response::HTTP_OK);
     }
 }

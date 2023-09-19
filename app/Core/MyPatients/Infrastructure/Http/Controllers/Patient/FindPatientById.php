@@ -19,11 +19,6 @@ class FindPatientById extends Controller
     public function __invoke(int $id): JsonResponse
     {
         $patient = $this->handler->handle(New FindPatientByIdCommand($id));
-
-        if(is_null($patient)) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
-
-        return response()->json(Response::HTTP_OK);
+        return response()->json($patient,Response::HTTP_OK);
     }
 }

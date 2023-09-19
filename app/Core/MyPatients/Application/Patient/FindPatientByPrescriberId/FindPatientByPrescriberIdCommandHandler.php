@@ -2,17 +2,22 @@
 
 namespace App\Core\MyPatients\Application\Patient\FindPatientByPrescriberId;
 
-use App\Core\MyPatients\Domain\Patient\Contracts\PatientInterface;
+use App\Core\MyPatients\Domain\Patient\Exceptions\PatientNotFoundException;
+use App\Core\MyPatients\Domain\Patient\Services\PatientFinder;
 
 
 class FindPatientByPrescriberIdCommandHandler
 {
-    public function __construct(private readonly PatientInterface $patient)
+    public function __construct(private readonly PatientFinder $patientFinder)
     {}
 
+    /**
+     * @throws PatientNotFoundException
+     */
     public function handle(FindPatientByPrescriberIdCommand $command)
     {
-        return $this->patient->findByPrescriberId($command->prescriberId());
+        $this->patientFinder->byPrescriberIdOrFail($command->prescriberId());
+        return $this->patientFinder->byPrescriberId($command->prescriberId());
     }
 
 }

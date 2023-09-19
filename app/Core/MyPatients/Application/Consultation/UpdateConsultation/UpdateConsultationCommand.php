@@ -18,7 +18,7 @@ class UpdateConsultationCommand
         return $this->id;
     }
 
-    public function consultation()
+    public function consultation(): array
     {
         return [
             'name' => $this->name

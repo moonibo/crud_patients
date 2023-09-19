@@ -19,6 +19,11 @@ class ConsultationFinder
         }
     }
 
+    public function findAll()
+    {
+        return $this->consultation->all();
+    }
+
     public function byId(int $id)
     {
         return $this->consultation->find($id);

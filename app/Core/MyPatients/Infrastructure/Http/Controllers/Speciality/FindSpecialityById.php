@@ -19,14 +19,7 @@ class FindSpecialityById extends Controller
 
     public function __invoke(int $id): JsonResponse
     {
-
         $speciality = $this->handler->handle(new FindSpecialityByIdCommand($id));
-        If (is_null($speciality)) {
-            return response()->json(null, Response::HTTP_NOT_FOUND);
-
-
-        }
-
         return response()->json($speciality, Response::HTTP_FOUND);
     }
 }

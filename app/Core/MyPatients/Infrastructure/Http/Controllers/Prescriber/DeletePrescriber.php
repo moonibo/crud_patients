@@ -17,12 +17,7 @@ class DeletePrescriber extends Controller
 
     public function __invoke(int $id): JsonResponse
     {
-        $deleted = $this->handler->handle(New DeletePrescriberCommand($id));
-
-        if(!$deleted) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
-
+        $this->handler->handle(New DeletePrescriberCommand($id));
         return response()->json(Response::HTTP_OK);
     }
 }

@@ -20,6 +20,6 @@ class UpdateSpeciality extends Controller
     public function __invoke(StoreSpecialityRequest $request, int $id): JsonResponse
     {
         $this->handler->handle(new UpdateSpecialityCommand([...$request->validated(), 'id' => $request->id]));
-        return response()->json(Response::HTTP_OK);
+        return response()->json(null, Response::HTTP_OK);
     }
 }

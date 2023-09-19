@@ -17,11 +17,6 @@ class FindPrescriberBySpecialityId extends Controller
     public function __invoke(int $id): JsonResponse
     {
         $prescribers = $this->handler->handle(New FindPrescriberBySpecialityIdCommand($id));
-
-        if (empty($prescribers->toArray())) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
-
         return response()->json($prescribers,Response::HTTP_OK);
     }
 }

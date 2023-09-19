@@ -15,16 +15,10 @@ class CreateSpeciality extends Controller
     public function __construct(private readonly CreateSpecialityCommandHandler $handler)
     {}
 
-    public function __invoke(StoreSpecialityRequest $request)
+    public function __invoke(StoreSpecialityRequest $request): JsonResponse
     {
-        if($request->validated()) {
-            $this->handler->handle(new CreateSpecialityCommand([
-                'name' => $request->name
-            ]));
-
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-        return response()->json(null, Response::HTTP_BAD_REQUEST);
+        $this->handler->handle(new CreateSpecialityCommand($request->validated()));
+        return response()->json(null, Response::HTTP_CREATED);
 
     }
 }

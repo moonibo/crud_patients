@@ -36,7 +36,7 @@ class UpdatePatientCommand
         return $this->gender;
     }
 
-    public function patient()
+    public function patient(): array
     {
         return [
             'name' => $this->name,

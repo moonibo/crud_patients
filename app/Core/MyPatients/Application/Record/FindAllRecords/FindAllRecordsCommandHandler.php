@@ -2,14 +2,14 @@
 
 namespace App\Core\MyPatients\Application\Record\FindAllRecords;
 
-use App\Core\MyPatients\Domain\Record\Contracts\RecordInterface;
+use App\Core\MyPatients\Domain\Record\Services\RecordFinder;
 
 class FindAllRecordsCommandHandler
 {
-    public function __construct(private readonly RecordInterface $record){}
+    public function __construct(private readonly RecordFinder $recordFinder){}
 
     public function handle()
     {
-        return $this->record->all();
+        return $this->recordFinder->findAll();
     }
 }

@@ -11,7 +11,7 @@ class FindPrescriptionByRecordIdCommand
         $this->record_id = $id;
     }
 
-    public function recordId()
+    public function recordId(): int
     {
         return $this->record_id;
     }

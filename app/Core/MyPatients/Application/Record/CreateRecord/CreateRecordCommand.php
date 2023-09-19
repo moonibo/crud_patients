@@ -17,17 +17,17 @@ class CreateRecordCommand
         $this->end_date = $data['end_date'];
     }
 
-    public function prescriberId()
+    public function prescriberId(): int
     {
         return $this->prescriber_id;
     }
 
-    public function patientId()
+    public function patientId(): int
     {
         return $this->patient_id;
     }
 
-    public function record()
+    public function record(): array
     {
         return [
             'prescriber_id' => $this->prescriber_id,

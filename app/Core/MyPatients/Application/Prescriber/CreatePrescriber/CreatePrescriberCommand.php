@@ -25,7 +25,7 @@ class CreatePrescriberCommand
         return $this->consultation_id;
     }
 
-    public function prescriber()
+    public function prescriber(): array
     {
         return [
             'name' => $this->name,

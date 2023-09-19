@@ -13,12 +13,9 @@ class FindRecordById extends Controller
     public function __construct(private readonly FindRecordByIdCommandHandler $handler)
     {}
 
-    public function __invoke(int $id): JsonResponse|int
+    public function __invoke(int $id): JsonResponse
     {
         $record = $this->handler->handle(new FindRecordByIdCommand($id));
-        if (is_null($record)) {
-            return Response::HTTP_NO_CONTENT;
-        }
         return response()->json($record, Response::HTTP_OK);
     }
 }

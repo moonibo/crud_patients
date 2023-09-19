@@ -17,22 +17,22 @@ class UpdatePrescriberCommand
         $this->consultation_id = $data['consultation_id'];
     }
 
-    public function id()
+    public function id(): int
     {
         return $this->id;
     }
 
-    public function specialityId()
+    public function specialityId(): int
     {
         return $this->speciality_id;
     }
 
-    public function consultationId()
+    public function consultationId(): int
     {
         return $this->consultation_id;
     }
 
-    public function prescriber()
+    public function prescriber(): array
     {
         return [
             'name' => $this->name,

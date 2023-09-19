@@ -15,11 +15,7 @@ class DeleteConsultation extends Controller
 
     public function __invoke(int $id): JsonResponse
     {
-        $deleted = $this->handler->handle(new DeleteConsultationCommand($id));
-
-        if (!$deleted) {
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        }
+        $this->handler->handle(new DeleteConsultationCommand($id));
         return response()->json(Response::HTTP_OK);
     }
 }

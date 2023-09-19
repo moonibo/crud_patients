@@ -2,15 +2,20 @@
 
 namespace App\Core\MyPatients\Application\Prescriber\FindPrescriberByConsultationId;
 
-use App\Core\MyPatients\Domain\Prescriber\Contracts\PrescriberInterface;
+use App\Core\MyPatients\Domain\Prescriber\Exceptions\PrescriberNotFoundException;
+use App\Core\MyPatients\Domain\Prescriber\Services\PrescriberFinder;
 
 class FindPrescriberByConsultationIdCommandHandler
 {
-    public function __construct(private readonly PrescriberInterface $prescriber) {}
+    public function __construct(private readonly PrescriberFinder $prescriberFinder) {}
 
+    /**
+     * @throws PrescriberNotFoundException
+     */
     public function handle(FindPrescriberByConsultationIdCommand $command)
     {
-        return $this->prescriber->findByConsultationId($command->consultationId());
+        $this->prescriberFinder->byConsultationIdOrFail($command->consultationId());
+        return $this->prescriberFinder->byConsultationId($command->consultationId());
     }
 }
 

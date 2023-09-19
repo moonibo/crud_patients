@@ -19,6 +19,11 @@ class RecordFinder
         }
     }
 
+    public function findAll()
+    {
+        return $this->record->all();
+    }
+
     public function byId(int $id)
     {
         return $this->record->find($id);
@@ -62,7 +67,7 @@ class RecordFinder
         return $this->record->findRecordsByPatientIdAndPrescriberId($patientId, $prescriberId);
     }
 
-    public function byPatientAndPrescriberIdOrFail(int $patientId, int $prescriberId)
+    public function byPatientAndPrescriberIdOrFail(int $patientId, int $prescriberId): void
     {
         $records = $this->byPatientAndPrescriberId($patientId, $prescriberId);
         if ($records->isEmpty()) {

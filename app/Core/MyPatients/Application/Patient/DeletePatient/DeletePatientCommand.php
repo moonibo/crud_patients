@@ -12,7 +12,7 @@ class DeletePatientCommand
         $this->patientId = $id;
     }
 
-    public function patientId()
+    public function patientId(): int
     {
         return $this->patientId;
     }

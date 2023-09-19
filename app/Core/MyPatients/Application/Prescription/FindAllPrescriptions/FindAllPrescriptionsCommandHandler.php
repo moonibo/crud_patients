@@ -2,14 +2,14 @@
 
 namespace App\Core\MyPatients\Application\Prescription\FindAllPrescriptions;
 
-use App\Core\MyPatients\Domain\Prescription\Contracts\PrescriptionInterface;
+use App\Core\MyPatients\Domain\Prescription\Services\PrescriptionFinder;
 
 class FindAllPrescriptionsCommandHandler
 {
-    public function __construct(private readonly PrescriptionInterface $prescription){}
+    public function __construct(private readonly PrescriptionFinder $prescriptionFinder){}
 
     public function handle()
     {
-        return $this->prescription->all();
+        return $this->prescriptionFinder->findAll();
     }
 }

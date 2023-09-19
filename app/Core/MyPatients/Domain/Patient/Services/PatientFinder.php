@@ -22,6 +22,11 @@ class PatientFinder
         }
     }
 
+    public function findAll()
+    {
+        return $this->patient->all();
+    }
+
     public function byId(int $id)
     {
         return $this->patient->find($id);
@@ -33,6 +38,19 @@ class PatientFinder
     public function byIdOrFail(int $id): void
     {
         $patient = $this->byId($id);
+        if ($patient == null) {
+            throw new PatientNotFoundException();
+        }
+    }
+
+    public function byPrescriberId(int $prescriber_id)
+    {
+        return $this->patient->findByPrescriberId($prescriber_id);
+    }
+
+    public function byPrescriberIdOrFail(int $prescriber_id): void
+    {
+        $patient = $this->byPrescriberId($prescriber_id);
         if ($patient == null) {
             throw new PatientNotFoundException();
         }

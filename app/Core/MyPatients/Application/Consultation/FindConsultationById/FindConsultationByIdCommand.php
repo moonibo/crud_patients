@@ -12,7 +12,7 @@ class FindConsultationByIdCommand
         $this->consultationId = $id;
     }
 
-    public function consultationId()
+    public function consultationId(): int
     {
         return $this->consultationId;
     }

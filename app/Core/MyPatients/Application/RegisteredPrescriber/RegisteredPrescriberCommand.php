@@ -17,17 +17,17 @@ class RegisteredPrescriberCommand
         $this->password = $data['password'];
     }
 
-    public function prescriberId()
+    public function prescriberId(): int
     {
         return $this->prescriber_id;
     }
 
-    public function password()
+    public function password(): int
     {
         return $this->password;
     }
 
-    public function mail()
+    public function mail(): int
     {
         return $this->mail;
     }
