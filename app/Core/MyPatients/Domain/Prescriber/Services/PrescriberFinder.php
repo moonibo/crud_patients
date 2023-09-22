@@ -12,6 +12,9 @@ class PrescriberFinder
     {
     }
 
+    /**
+     * @throws PrescriberNotFoundException
+     */
     public function exists(int $id): void
     {
         $exists = $this->prescriber->exists($id);
@@ -30,6 +33,9 @@ class PrescriberFinder
         return $this->prescriber->find($id);
     }
 
+    /**
+     * @throws PrescriberNotFoundException
+     */
     public function byIdOrFail(int $id): void
     {
         $prescriber = $this->byId($id);
@@ -43,6 +49,9 @@ class PrescriberFinder
         return $this->prescriber->findByConsultationId($consultation_id);
     }
 
+    /**
+     * @throws PrescriberNotFoundException
+     */
     public function byConsultationIdOrFail(int $consultation_id): void
     {
         $prescriber = $this->byConsultationId($consultation_id);
@@ -56,6 +65,9 @@ class PrescriberFinder
         return $this->prescriber->findBySpecialityId($speciality_id);
     }
 
+    /**
+     * @throws PrescriberNotFoundException
+     */
     public function bySpecialityIdOrFail(int $speciality_id): void
     {
         $prescriber = $this->bySpecialityId($speciality_id);

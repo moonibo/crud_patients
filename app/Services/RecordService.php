@@ -78,7 +78,7 @@ class RecordService
     public function findRecordByPatientIdAndPrescriberId(int $patient_id, int $prescriber_id)
     {
         $record = $this->record->findRecordByPatientIdAndPrescriberId($patient_id, $prescriber_id);
-
+        dd($record[0]);
         if (Carbon::parse($record[0]->end_date)->isPast()) {
             $new_record = $this->createNewRecordWhenExpired($patient_id, $prescriber_id);
             $this->createNewPrescriptionWhenExpired($new_record);

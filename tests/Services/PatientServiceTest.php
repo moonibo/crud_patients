@@ -7,6 +7,7 @@ use App\Services\PatientService;
 use App\Services\PrescriberInterface;
 use Tests\TestCase;
 use Mockery\MockInterface;
+//use App\Core\MyPatients\Domain\Patient\Contracts\PatientInterface;
 
 
 class PatientServiceTest extends TestCase
@@ -44,7 +45,7 @@ class PatientServiceTest extends TestCase
         $prescriber = $this->mock(PrescriberInterface::class);
 
         $repository = $this->mock(PatientInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findByPrescriberId')
+            $mock->shouldReceive('findPrescriberById')
                 ->once()
                 ->with(1)
                 ->andReturn([

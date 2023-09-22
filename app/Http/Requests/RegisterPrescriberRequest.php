@@ -24,7 +24,7 @@ class RegisterPrescriberRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'mail' => 'required|string|email',
+            'email' => 'required|string|email',
             'password' => 'required|string|min:6|confirmed',
             'prescriber_id' => 'required|int',
         ];

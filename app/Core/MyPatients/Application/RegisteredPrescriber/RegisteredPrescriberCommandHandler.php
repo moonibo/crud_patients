@@ -12,9 +12,9 @@ class RegisteredPrescriberCommandHandler
                                 private readonly RegisteredPrescriberInterface $registeredPrescriber)
     {}
 
-    public function handle(RegisteredPrescriberCommand $command)
+    public function handle(RegisteredPrescriberCommand $command): void
     {
-        return $this->registeredPrescriber->create($command->registeredPrescriber());
+        $this->registeredPrescriber->create($command->registeredPrescriber());
     }
 
     public function findPrescriberById(int $id)

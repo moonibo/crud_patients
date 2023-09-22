@@ -31,6 +31,7 @@ class UpdatePatientCommandHandler
             $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender()), 'prescriber_id' => $command->prescriberId()], $command->id());
         }
 
+
         $this->patient->update([...$command->patient(),'gender' => $this->transformGender($command->gender())], $command->id());
 
     }

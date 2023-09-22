@@ -34,7 +34,7 @@ class CreatePrescriptionCommandHandler
         $this->consultationFinder->byIdOrFail($command->consultationId());
 
         if (!$this->recordFinder->byId($command->recordId())) {
-            $record = $this->record->findLatestOpenRecordByPatientAndPrescriberId($command->patientId(), $command->prescriberId());
+            $record = $this->recordFinder->findLatestOpenRecordByPatientAndPrescriberId($command->patientId(), $command->prescriberId());
             if ($record) {
                 $this->prescription->create([...$command->prescription(), 'record_id' => $record->id]);
             } else {

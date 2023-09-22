@@ -8,6 +8,7 @@ use App\Services\PrescriberInterface;
 use App\Services\PrescriptionInterface;
 use App\Services\PrescriptionService;
 use App\Services\RecordInterface;
+use App\Services\RecordService;
 use Tests\TestCase;
 use Mockery\MockInterface;
 
@@ -21,6 +22,7 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
             $mock->shouldReceive('find')
@@ -36,7 +38,7 @@ class PrescriptionServiceTest extends TestCase
                 ]);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $prescription = $service->show(1);
         $this->assertEquals([
             'prescriber_id' => 2,
@@ -55,9 +57,10 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findByPatientId')
+            $mock->shouldReceive('findPatientById')
                 ->once()
                 ->with(5)
                 ->andReturn([
@@ -70,7 +73,7 @@ class PrescriptionServiceTest extends TestCase
                 ]);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $prescription = $service->findPatientById(5);
         $this->assertEquals([
             'prescriber_id' => 2,
@@ -89,9 +92,10 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findByConsultationId')
+            $mock->shouldReceive('findConsultationById')
                 ->once()
                 ->with(1)
                 ->andReturn([
@@ -104,7 +108,7 @@ class PrescriptionServiceTest extends TestCase
                 ]);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $prescription = $service->findConsultationById(1);
         $this->assertEquals([
             'prescriber_id' => 2,
@@ -123,9 +127,10 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
-            $mock->shouldReceive('findByRecordId')
+            $mock->shouldReceive('findRecordById')
                 ->once()
                 ->with(3)
                 ->andReturn([
@@ -138,7 +143,7 @@ class PrescriptionServiceTest extends TestCase
                 ]);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $prescription = $service->findRecordById(3);
         $this->assertEquals([
             'prescriber_id' => 2,
@@ -166,6 +171,7 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $prescriber->shouldReceive('find')->once()->with($attributes['prescriber_id'])->andReturn(true);
         $patient->shouldReceive('find')->once()->with($attributes['patient_id'])->andReturn(true);
@@ -185,7 +191,7 @@ class PrescriptionServiceTest extends TestCase
                 ]);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $prescription = $service->store($attributes);
         $this->assertEquals([
             'prescriber_id' => 2,
@@ -213,6 +219,7 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $prescriber->shouldReceive('find')->once()->with($attributes['prescriber_id'])->andReturn(true);
         $patient->shouldReceive('find')->once()->with($attributes['patient_id'])->andReturn(true);
@@ -232,7 +239,7 @@ class PrescriptionServiceTest extends TestCase
                 ]);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $prescription = $service->update($attributes, 1);
         $this->assertEquals([
             'prescriber_id' => 1,
@@ -251,6 +258,7 @@ class PrescriptionServiceTest extends TestCase
         $patient = $this->mock(PatientInterface::class);
         $consultation = $this->mock(ConsultationInterface::class);
         $record = $this->mock(RecordInterface::class);
+        $recordService = $this->mock(RecordService::class);
 
         $repository = $this->mock(PrescriptionInterface::class, function(MockInterface $mock) {
             $mock->shouldReceive('delete')
@@ -259,7 +267,7 @@ class PrescriptionServiceTest extends TestCase
                 ->andReturn(true);
         });
 
-        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record);
+        $service = new PrescriptionService($repository, $prescriber, $patient, $consultation, $record, $recordService);
         $this->assertTrue($service->delete(1));
     }
 }

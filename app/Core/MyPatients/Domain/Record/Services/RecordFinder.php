@@ -74,4 +74,9 @@ class RecordFinder
             throw new RecordNotFoundException();
         }
     }
+
+    public function findLatestOpenRecordByPatientAndPrescriberId(int $patient_id, int $prescriber_id)
+    {
+        return $this->record->findLatestOpenRecordByPatientAndPrescriberId($patient_id, $prescriber_id);
+    }
 }
