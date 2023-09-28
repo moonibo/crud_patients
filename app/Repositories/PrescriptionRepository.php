@@ -6,12 +6,18 @@ use App\Models\Prescription;
 use App\Core\MyPatients\Domain\Prescription\Contracts\PrescriptionInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class PrescriptionRepository extends BaseRepository implements PrescriptionInterface
 {
     protected function model(): ?string
     {
         return Prescription::class;
+    }
+
+    public function find(int $id): ?Model
+    {
+        return $this->query()->with('step.method')->find($id);
     }
 
     public function findByRecordId (int $record_id) : array|Collection
@@ -23,6 +29,5 @@ class PrescriptionRepository extends BaseRepository implements PrescriptionInter
     {
         return $this->query()->where('updated_at', '<', Carbon::now()->subMinutes(15))->update(['is_editable' => false]);
     }
-
 
 }

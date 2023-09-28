@@ -6,11 +6,11 @@ use App\Core\MyPatients\Domain\Consultation\Contracts\ConsultationInterface;
 
 class CreateConsultationCommandHandler
 {
-    public function __construct(private readonly ConsultationInterface $speciality)
+    public function __construct(private readonly ConsultationInterface $consultation)
     {}
 
     public function handle(CreateConsultationCommand $command): void
     {
-        $this->speciality->create($command->consultation());
+        $this->consultation->create($command->consultation());
     }
 }

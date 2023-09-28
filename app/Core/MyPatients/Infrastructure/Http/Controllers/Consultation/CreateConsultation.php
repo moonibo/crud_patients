@@ -2,9 +2,9 @@
 
 namespace App\Core\MyPatients\Infrastructure\Http\Controllers\Consultation;
 
-use App\Http\Controllers\Controller;
 use App\Core\MyPatients\Application\Consultation\CreateConsultation\CreateConsultationCommand;
 use App\Core\MyPatients\Application\Consultation\CreateConsultation\CreateConsultationCommandHandler;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreConsultationRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

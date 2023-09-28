@@ -2,8 +2,8 @@
 
 namespace Tests\Core\Application\Consultation\CreateConsultation;
 
-use App\Core\MyPatients\Application\Consultation\CreateConsultation\CreateConsultationCommand;
-use App\Core\MyPatients\Application\Consultation\CreateConsultation\CreateConsultationCommandHandler;
+use App\Core\MyPatients\Application\Consultation\CreateConsultation\CreateAllergyCommand;
+use App\Core\MyPatients\Application\Consultation\CreateConsultation\CreateAllergyCommandHandler;
 use App\Core\MyPatients\Domain\Consultation\Contracts\ConsultationInterface;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -26,8 +26,8 @@ class CreateConsultationTest extends TestCase
                 ]);
         });
 
-        $useCase =  new CreateConsultationCommandHandler($repository);
-        $useCase->handle(new CreateConsultationCommand($consultation));
+        $useCase =  new CreateAllergyCommandHandler($repository);
+        $useCase->handle(new CreateAllergyCommand($consultation));
         $this->assertEquals(['name' => 'test consultation'], $consultation);
 
     }

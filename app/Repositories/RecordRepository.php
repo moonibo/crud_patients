@@ -5,7 +5,9 @@ namespace App\Repositories;
 use App\Models\Record;
 use App\Core\MyPatients\Domain\Record\Contracts\RecordInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 
 class RecordRepository extends BaseRepository implements RecordInterface
@@ -32,5 +34,7 @@ class RecordRepository extends BaseRepository implements RecordInterface
             ->latest('created_at')
             ->first();
     }
+
+
 
 }

@@ -22,5 +22,7 @@ interface PrescriptionInterface
 
     public function setEditableToFalseUpdatedOlderThanFifteenMinutes();
 
+    //public function getMethodAndStep(int $prescription_id);
+
     public function delete(int $id);
 }

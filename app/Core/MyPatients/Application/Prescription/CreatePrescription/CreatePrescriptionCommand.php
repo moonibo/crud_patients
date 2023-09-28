@@ -8,6 +8,8 @@ class CreatePrescriptionCommand
     private int $patient_id;
     private int $consultation_id;
     private int $record_id;
+    private int $step_id;
+    private array $pathologies;
     private int $doses_per_day;
     private int $days;
 
@@ -17,6 +19,8 @@ class CreatePrescriptionCommand
         $this->patient_id = $data['patient_id'];
         $this->consultation_id = $data['consultation_id'];
         $this->record_id = $data['record_id'];
+        $this->step_id = $data['step_id'];
+        $this->pathologies = $data['pathologies'];
         $this->doses_per_day = $data['doses_per_day'];
         $this->days = $data['days'];
     }
@@ -41,6 +45,16 @@ class CreatePrescriptionCommand
         return $this->record_id;
     }
 
+    public function stepId(): int
+    {
+        return $this->step_id;
+    }
+
+    public function pathologies()
+    {
+        return $this->pathologies;
+    }
+
     public function prescription(): array
     {
         return [
@@ -48,6 +62,8 @@ class CreatePrescriptionCommand
             'patient_id' => $this->patient_id,
             'consultation_id' => $this->consultation_id,
             'record_id' => $this->record_id,
+            'step_id' => $this->step_id,
+            'pathologies' => $this->pathologies,
             'doses_per_day' => $this->doses_per_day,
             'days' => $this->days
         ];

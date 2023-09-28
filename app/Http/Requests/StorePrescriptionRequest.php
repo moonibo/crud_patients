@@ -27,6 +27,8 @@ class StorePrescriptionRequest extends FormRequest
             'patient_id' => 'required|int',
             'consultation_id' => 'required|int',
             'record_id' => 'required|int',
+            'pathologies' => 'array',
+            'step_id' => 'required|int',
             'doses_per_day' => 'required|int',
             'days' => 'required|int',
         ];
