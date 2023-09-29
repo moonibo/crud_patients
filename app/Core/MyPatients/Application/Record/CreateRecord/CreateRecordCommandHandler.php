@@ -33,35 +33,21 @@ class CreateRecordCommandHandler
      */
     public function handle(CreateRecordCommand $command): void
     {
-        $allergies_ids = [];
-        $pathologies_ids = [];
-        $timestamps = ['created_at' => now(), 'updated_at' => now()];
-
         $this->prescriberFinder->byIdOrFail($command->prescriberId());
         $this->patientFinder->byIdOrFail($command->patientId());
 
-        if ($command->allergies()[0] !== null) {
-            $allergies_ids = explode(',', $command->allergies()[0]);
-            foreach ($allergies_ids as $id) {
+        if (!empty($command->allergies())) {
+            foreach ($command->allergies() as $id) {
                 $this->allergyFinder->byIdOrFail($id);
             }
         }
-        if ($command->pathologies()[0] !== null) {
-            $pathologies_ids = explode(',', $command->pathologies()[0]);
-            foreach ($pathologies_ids as $id) {
+        if (!empty($command->pathologies())) {
+            foreach ($command->pathologies() as $id) {
                 $this->pathologyFinder->byIdOrFail($id);
             }
         }
 
-        $record = $this->record->create($command->record());
-
-        if(!empty($allergies_ids)) {
-            $record->allergies()->attach($allergies_ids, $timestamps);
-        }
-        if (!empty($pathologies_ids)) {
-            $record->pathologies()->attach($pathologies_ids, $timestamps);
-        }
-
+        $this->record->create(['record' => $command->record(), 'allergies' => $command->allergies(), 'pathologies' => $command->pathologies()]);
     }
 
 }

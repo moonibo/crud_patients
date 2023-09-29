@@ -27,8 +27,7 @@ class CreatePrescriptionCommandHandler
                                 private readonly ConsultationFinder $consultationFinder,
                                 private readonly RecordFinder $recordFinder,
                                 private readonly StepFinder $stepFinder,
-                                private readonly PathologyFinder $pathologyFinder,
-                                private readonly RecordPathologiesInterface $recordPathologies){}
+                                private readonly PathologyFinder $pathologyFinder){}
 
     /**
      * @throws ConsultationNotFoundException
@@ -39,17 +38,13 @@ class CreatePrescriptionCommandHandler
      */
     public function handle(CreatePrescriptionCommand $command): void
     {
-        $pathologies_ids = [];
-        $timestamps = ['created_at' => now(), 'updated_at' => now()];
-
         $this->prescriberFinder->byIdOrFail($command->prescriberId());
         $this->patientFinder->byIdOrFail($command->patientId());
         $this->consultationFinder->byIdOrFail($command->consultationId());
         $this->stepFinder->byIdOrFail($command->stepId());
 
-        if ($command->pathologies()[0] !== null) {
-            $pathologies_ids = explode(',', $command->pathologies()[0]);
-            foreach ($pathologies_ids as $id) {
+        if (!empty($command->pathologies())) {
+            foreach ($command->pathologies() as $id) {
                 $this->pathologyFinder->byIdOrFail($id);
             }
         }
@@ -57,30 +52,27 @@ class CreatePrescriptionCommandHandler
         if (!$this->recordFinder->byId($command->recordId())) {
             $record = $this->recordFinder->findLatestOpenRecordByPatientAndPrescriberId($command->patientId(), $command->prescriberId());
             if ($record) {
-                $prescription = $this->prescription->create([...$command->prescription(), 'record_id' => $record->id]);
-                $prescription->pathologies()->attach($pathologies_ids, $timestamps);
-                $this->recordPathologies->updateOrCreateRecordPathologies($record->id, $pathologies_ids);
+                $this->prescription->create(['prescription' => [...$command->prescription(), 'record_id' => $record->id], 'pathologies' => $command->pathologies(),]);
             } else {
-                $new_record = $this->createNewRecordWhenExpired($command->patientId(), $command->prescriberId());
-                $prescription = $this->prescription->create([...$command->prescription(), 'record_id' => $new_record->id]);
-                $prescription->pathologies()->attach($pathologies_ids, $timestamps);
-                $this->recordPathologies->updateOrCreateRecordPathologies($new_record->id, $pathologies_ids);
+                $new_record = $this->createNewRecordWhenExpired($command->patientId(), $command->prescriberId(), $command->pathologies());
+                $this->prescription->create(['prescription' => [...$command->prescription(), 'record_id' => $new_record->id], 'pathologies' => $command->pathologies(),]);
             }
         } else {
-            $this->recordPathologies->updateOrCreateRecordPathologies($command->recordId(), $pathologies_ids);
             $this->prescription->create($command->prescription());
         }
     }
 
-    public function createNewRecordWhenExpired(int $patient_id, int $prescriber_id)
+    public function createNewRecordWhenExpired(int $patient_id, int $prescriber_id, array $pathologies)
     {
         $new_record_attr = [
             'prescriber_id' => $prescriber_id,
             'patient_id' => $patient_id,
+            'allergies' => '',
+            'pathologies' => $pathologies,
             'start_date' => Carbon::now()->toDateString(),
             'end_date' => Carbon::now()->addMonths(3)->toDateString(),
         ];
 
-        return $this->record->create($new_record_attr);
+        return $this->record->create(['record' => $new_record_attr, 'allergies' => $new_record_attr['allergies'], 'pathologies' => $new_record_attr['pathologies']]);
     }
 }

@@ -46,8 +46,6 @@ class CreateRecordCommand
         return [
             'prescriber_id' => $this->prescriber_id,
             'patient_id' => $this->patient_id,
-            'allergies'=> $this->allergies,
-            'pathologies' => $this->pathologies,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date
         ];

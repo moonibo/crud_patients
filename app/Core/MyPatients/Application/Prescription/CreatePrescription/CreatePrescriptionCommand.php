@@ -63,7 +63,6 @@ class CreatePrescriptionCommand
             'consultation_id' => $this->consultation_id,
             'record_id' => $this->record_id,
             'step_id' => $this->step_id,
-            'pathologies' => $this->pathologies,
             'doses_per_day' => $this->doses_per_day,
             'days' => $this->days
         ];

@@ -17,6 +17,14 @@ class RecordRepository extends BaseRepository implements RecordInterface
         return Record::class;
     }
 
+    public function create(array $attributes): Model|Builder
+    {
+        $record =  $this->query()->create($attributes['record']);
+        $record->allergies()->attach($attributes['allergies']);
+        $record->pathologies()->attach($attributes['pathologies']);
+        return $record;
+    }
+
     public function findRecordsByPatientIdAndPrescriberId (int $patient_id, int $prescriber_id) : array|Collection
     {
         return $this->query()->where(['patient_id' => $patient_id, 'prescriber_id' => $prescriber_id])->get();
